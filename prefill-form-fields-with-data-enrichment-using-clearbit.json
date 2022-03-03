@@ -1,0 +1,238 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Data autocomplete with Clearbit",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_rExv",
+        "name": "Email",
+        "components": [
+          {
+            "id": "name",
+            "label": "Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_YGfp",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "company_name",
+            "label": "Company name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.company_name}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "company_domain",
+            "label": "Company website",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.company_domain}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "role",
+            "label": "Role",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.role}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "job_title",
+            "label": "Job title",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.job_title}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_QOow",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          },
+          {
+            "id": "previous_button_K8Io",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_aGUl",
+        "name": "Details",
+        "beforeNext": {
+          "flowId": null
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": "Thank you! Your form has been submitted successfully",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Data autocomplete with Clearbit",
+      "description": null,
+      "actions": [
+        {
+          "id": "findPersonAndCompanyByEmail",
+          "alias": null,
+          "notes": null,
+          "allowFailure": true,
+          "type": "CLEARBIT",
+          "action": "FIND_PERSON",
+          "params": {
+            "email": "{{fields.email}}",
+            "connectionId": "#CONN-1#",
+            "secretKey": null
+          }
+        },
+        {
+          "id": "storeStateVariable",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "STORE_STATE",
+          "params": {
+            "data": {
+              "company_name": "{{findPersonAndCompanyByEmail.body.company.name}}",
+              "company_domain": "{{findPersonAndCompanyByEmail.body.person.employment.domain}}",
+              "role": "{{findPersonAndCompanyByEmail.body.person.employment.role}}",
+              "job_title": "{{findPersonAndCompanyByEmail.body.person.employment.title}}"
+            }
+          }
+        },
+        {
+          "id": "goToTheNextFormStep",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "NEXT_STEP",
+          "params": {}
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "164632265376815677",
+      "appId": "CLEARBIT",
+      "name": "Clearbit - Playground"
+    }
+  }
+}
