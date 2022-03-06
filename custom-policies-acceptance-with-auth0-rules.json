@@ -1,0 +1,206 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Auth0 - Accept policies",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [
+      {
+        "key": "state",
+        "value": null
+      },
+      {
+        "key": "session_token",
+        "value": null
+      }
+    ],
+    "steps": [
+      {
+        "id": "step_j1NR",
+        "name": "Blank step",
+        "components": [
+          {
+            "id": "rich_text_7L8C",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>New policies update</h2>\n<p>These terms and conditions outline the rules and regulations for the use of Company Name's Website, located at Website.com.</p>\n<p>By accessing this website we assume you accept these terms and conditions. Do not continue to use Website Name if you do not agree to take all of the terms and conditions stated on this page.</p>\n<p>The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: “Client”, “You” and “Your” refers to you, the person log on this website and compliant to the Company's terms and conditions. “The Company”, “Ourselves”, “We”, “Our” and “Us”, refers to our Company. “Party”, “Parties”, or “Us”, refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client's needs in respect of provision of the Company's stated services, in accordance with and subject to, prevailing law of Spain. Any use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to same.</p>"
+            }
+          },
+          {
+            "id": "terms_accepted",
+            "label": null,
+            "hint": null,
+            "category": "FIELD",
+            "type": "LEGAL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "text": "<p>I agree to the Terms of Service &amp; Privacy Policy</p>"
+            }
+          },
+          {
+            "id": "next_button_Strv",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Continue"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": null,
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 0,
+        "target": "{{state.redirectUrl}}"
+      }
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": true
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Auth0 - Update policies flow",
+      "description": null,
+      "actions": [
+        {
+          "id": "verifyJwt",
+          "alias": null,
+          "notes": null,
+          "allowFailure": true,
+          "type": "JWT",
+          "action": "VERIFY_SIGNATURE",
+          "params": {
+            "secretOrPublicKey": "MY_AWESOME_SECRET_TOKEN",
+            "token": "{{input.body.session_token}}",
+            "audience": null,
+            "issuer": "https://YOUR_AUTH0_SUBDOMAIN.auth0.com/",
+            "algorithm": "HS256"
+          }
+        },
+        {
+          "id": "ifThenCondition",
+          "alias": "Is it valid JWT?",
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{verifyJwt.valid}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "signJwt",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "JWT",
+                "action": "SIGN_JWT",
+                "params": {
+                  "secretOrPrivateKey": "MY_AWESOME_SECRET_TOKEN",
+                  "algorithm": "HS256",
+                  "payload": {
+                    "other": {
+                      "terms_accepted": true
+                    },
+                    "state": "{{input.body.state}}"
+                  },
+                  "subject": "{{verifyJwt.payload.sub}}",
+                  "issuer": "https://YOUR_AUTH0_SUBDOMAIN.auth0.com/",
+                  "audience": null,
+                  "expiresIn": "15s"
+                }
+              },
+              {
+                "id": "storeStateVariable_9ENh",
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "redirectUrl": "https://YOUR_AUTH0_SUBDOMAIN.auth0.com/continue?state={{fields.state}}&session_token={{signJwt.token}}"
+                  }
+                },
+                "alias": null,
+                "notes": null,
+                "allowFailure": false
+              },
+              {
+                "id": "submitTheForm_5Vk9",
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                },
+                "alias": null,
+                "notes": null,
+                "allowFailure": false
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_zlvZ",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "We are sorry, but your session token is invalid or it has expired. Please, try to log in again."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {}
+}

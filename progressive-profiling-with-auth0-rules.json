@@ -1,0 +1,227 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Auth0 - Progressive profiling",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [
+      {
+        "key": "state",
+        "value": null
+      },
+      {
+        "key": "session_token",
+        "value": null
+      }
+    ],
+    "steps": [
+      {
+        "id": "step_dGi2",
+        "name": "Blank step",
+        "components": [
+          {
+            "id": "rich_text_l534",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Complete your profile!</h2>\n<p>We need you to complete your profile to personalize your experience.</p>"
+            }
+          },
+          {
+            "id": "company_name",
+            "label": "Company name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "job_title",
+            "label": "Job title",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_rx0X",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Continue"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": null,
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 0,
+        "target": "{{state.redirectUrl}}"
+      }
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": true
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Auth0 - Complete profile flow",
+      "description": null,
+      "actions": [
+        {
+          "id": "verifyJwt",
+          "alias": null,
+          "notes": null,
+          "allowFailure": true,
+          "type": "JWT",
+          "action": "VERIFY_SIGNATURE",
+          "params": {
+            "secretOrPublicKey": "MY_AWESOME_SECRET_TOKEN",
+            "token": "{{input.body.session_token}}",
+            "audience": null,
+            "issuer": "https://YOUR_AUTH0_SUBDOMAIN.auth0.com/",
+            "algorithm": "HS256"
+          }
+        },
+        {
+          "id": "ifThenCondition_0s6k",
+          "alias": "Is it valid JWT?",
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{verifyJwt.valid}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "signJwt",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "JWT",
+                "action": "SIGN_JWT",
+                "params": {
+                  "secretOrPrivateKey": "MY_AWESOME_SECRET_TOKEN",
+                  "algorithm": "HS256",
+                  "payload": {
+                    "other": {
+                      "company_name": "{{input.body.company_name}}",
+                      "job_title": "{{input.body.job_title}}"
+                    },
+                    "state": "{{input.body.state}}"
+                  },
+                  "subject": "{{verifyJwt.payload.sub}}",
+                  "issuer": "https://YOUR_AUTH0_SUBDOMAIN.auth0.com/",
+                  "audience": null,
+                  "expiresIn": "15s"
+                }
+              },
+              {
+                "id": "storeStateVariable_aruq",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "redirectUrl": "https://YOUR_AUTH0_SUBDOMAIN.auth0.com/continue?state={{input.body.state}}&session_token={{signJwt.token}}"
+                  }
+                }
+              },
+              {
+                "id": "submitTheForm_e6F9",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_zlvZ",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "We are sorry, but your session token is invalid or it has expired. Please, try to log in again."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {}
+}
