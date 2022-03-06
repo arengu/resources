@@ -1,0 +1,295 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "B2B sales pipeline form",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_p3jT",
+        "name": "Name & Email",
+        "components": [
+          {
+            "id": "rich_text_tW14",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h3>Let's talk! </h3><p>An expert will reach out to discuss your needs.</p>"
+            }
+          },
+          {
+            "id": "name",
+            "label": "Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_mOi4",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Next"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "rich_text_35G0",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h3>About your company</h3><p>Complete your profile for a personalized experience.</p>"
+            }
+          },
+          {
+            "id": "company",
+            "label": "Company name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "title",
+            "label": "Job title",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_4QKu",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Next"
+            }
+          },
+          {
+            "id": "previous_button_4vPQ",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_pqrn",
+        "name": "Company info",
+        "beforeNext": {
+          "flowId": null
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "html_OXEm",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"calendly-inline-widget\" style=\"min-width:320px;height:800px;\" data-auto-load=\"false\"></div>\n<script type=\"text/javascript\" src=\"https://assets.calendly.com/assets/external/widget.js\"></script>\n<script>\n  Calendly.initInlineWidget({\n    url: 'https://calendly.com/your-calendly-slug/your-event?hide_event_type_details=1',\n    parentElement: document.querySelector('.calendly-inline-widget'),\n    prefill: {\n      name: '{{fields.name}}',\n      email: '{{fields.email}}'\n    }\n  });\n</script>\n<script>\n  function isCalendlyEvent(e) {\n    return e.data.event && e.data.event.indexOf('calendly') === 0;\n  };\n  window.addEventListener(\n    'message',\n    function (e) {\n      if (isCalendlyEvent(e) && e.data.event === 'calendly.event_scheduled') {\n        $form.goForward();\n      }\n    }\n  );\n</script>"
+            }
+          },
+          {
+            "id": "next_button_j44t",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          },
+          {
+            "id": "previous_button_kQ2b",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_vURr",
+        "name": "Calendar",
+        "beforeNext": {
+          "flowId": null
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "flowId": null,
+      "email": null
+    },
+    "ending": {
+      "content": "Thank you! Your form has been submitted successfully.",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {
+      "primaryColor": "#0c8dcd"
+    },
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Data enrichment & Jump to step",
+      "description": null,
+      "actions": [
+        {
+          "id": "findPersonAndCompanyByEmail",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "CLEARBIT",
+          "action": "FIND_PERSON",
+          "params": {
+            "email": "{{input.body.email}}",
+            "connectionId": "#CONN-1#",
+            "secretKey": null
+          }
+        },
+        {
+          "id": "ifThenCondition",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "IS_NOT_NULL",
+                  "operands": [
+                    "{{findPersonAndCompanyByEmail.body.person.employment.name}}"
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "storeStateVariable",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "company": "{{findByEmail.body.person.employment.name}}",
+                    "title": "{{findByEmail.body.person.employment.title}}"
+                  }
+                }
+              },
+              {
+                "id": "jumpToAFormStep",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "JUMP_TO_STEP",
+                "params": {
+                  "formId": "163947943682313212",
+                  "stepId": "step_vURr"
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "goToTheNextFormStep",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "NEXT_STEP",
+                "params": {}
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "163948127403496082",
+      "appId": "CLEARBIT",
+      "name": "Clearbit #1"
+    }
+  }
+}

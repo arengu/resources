@@ -1,0 +1,520 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Partial submissions with Airtable",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_dwJI",
+        "name": "Intro & Email",
+        "components": [
+          {
+            "id": "rich_text_JxpX",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h3>Hi and welcome to Arengu!</h3>"
+            }
+          },
+          {
+            "id": "rich_text_FY77",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<p>First of all, please, tell us your name and an email address so we can contact you later:</p>"
+            }
+          },
+          {
+            "id": "Name",
+            "label": "Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "Email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_jODX",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Next"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "choice_1",
+            "label": "Which use cases are you interested in?",
+            "hint": null,
+            "category": "FIELD",
+            "type": "CHOICE",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiple": true,
+              "options": [
+                {
+                  "label": "User registration flows",
+                  "value": "User registration flows"
+                },
+                {
+                  "label": "SMS & Email OTP verification",
+                  "value": "SMS & Email OTP verification"
+                },
+                {
+                  "label": "Subscription payments",
+                  "value": "Subscription payments"
+                },
+                {
+                  "label": "Passwordless flows",
+                  "value": "Passwordless flows"
+                },
+                {
+                  "label": "Multi-factor authentication",
+                  "value": "Multi-factor authentication"
+                },
+                {
+                  "label": "Approval forms",
+                  "value": "Approval forms"
+                },
+                {
+                  "label": "User qualification flows",
+                  "value": "User qualification flows"
+                },
+                {
+                  "label": "Progressive profiling",
+                  "value": "Progressive profiling"
+                },
+                {
+                  "label": "Other",
+                  "value": "Other"
+                }
+              ],
+              "defaultValue": []
+            }
+          },
+          {
+            "id": "next_button_KXvM",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Next"
+            }
+          },
+          {
+            "id": "previous_button_Q8J6",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_eBC6",
+        "name": "Question 1",
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "choice_2",
+            "label": "Which are the technologies used in the project?",
+            "hint": null,
+            "category": "FIELD",
+            "type": "CHOICE",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiple": true,
+              "options": [
+                {
+                  "label": "Laravel",
+                  "value": "Laravel"
+                },
+                {
+                  "label": "Symfony",
+                  "value": "Symfony"
+                },
+                {
+                  "label": "Express.js",
+                  "value": "Express.js"
+                },
+                {
+                  "label": "Ruby on Rails",
+                  "value": "Ruby on Rails"
+                },
+                {
+                  "label": "Spring",
+                  "value": "Spring"
+                },
+                {
+                  "label": "Django",
+                  "value": "Django"
+                },
+                {
+                  "label": "WordPress",
+                  "value": "WordPress"
+                },
+                {
+                  "label": "PrestaShop",
+                  "value": "PrestaShop"
+                },
+                {
+                  "label": "Other",
+                  "value": "Other"
+                }
+              ],
+              "defaultValue": []
+            }
+          },
+          {
+            "id": "next_button_L5Mx",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Next"
+            }
+          },
+          {
+            "id": "previous_button_IQOH",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_Vc35",
+        "name": "Question 2",
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "choice_3",
+            "label": "Who is going to use Arengu?",
+            "hint": null,
+            "category": "FIELD",
+            "type": "CHOICE",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiple": false,
+              "options": [
+                {
+                  "label": "A single person with technical skills.",
+                  "value": "A single person with technical skills."
+                },
+                {
+                  "label": "A team with technical skills.",
+                  "value": "A team with technical skills."
+                },
+                {
+                  "label": "A team without technical knowledge.",
+                  "value": "A team without technical knowledge."
+                },
+                {
+                  "label": "A team of people with different levels of technical knowledge.",
+                  "value": "A team of people with different levels of technical knowledge."
+                }
+              ],
+              "defaultValue": null
+            }
+          },
+          {
+            "id": "next_button_lycW",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          },
+          {
+            "id": "previous_button_10Fy",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_3tfa",
+        "name": "Question 3",
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": "Thank you! Your form has been submitted successfully.",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Send data to Airtable",
+      "description": null,
+      "actions": [
+        {
+          "alias": "Has record ID?",
+          "id": "ifThenCondition_recordID",
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EXISTS",
+                  "operands": [
+                    "{{state.recordID}}"
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "updateARecord_q3e4",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "AIRTABLE",
+                "action": "UPDATE_RECORD",
+                "params": {
+                  "baseId": "YOUR_BASE_ID",
+                  "tableName": "YOUR_TABLE_NAME",
+                  "recordId": "{{state.recordID}}",
+                  "fields": {
+                    "Name": "{{input.body.Name}}",
+                    "Email": "{{input.body.Email}}",
+                    "Question 1": "{{input.body.choice_1}}",
+                    "Question 2": "{{input.body.choice_2}}",
+                    "Question 3": "{{input.body.choice_3}}"
+                  },
+                  "connectionId": "#CONN-1#",
+                  "apiKey": null
+                }
+              },
+              {
+                "id": "goToTheNextFormStep_BfdH",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "NEXT_STEP",
+                "params": {}
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "listRecords",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "AIRTABLE",
+                "action": "LIST_RECORDS",
+                "params": {
+                  "baseId": "appnGuJ0zyYbGuzIE",
+                  "tableName": "YOUR_TABLE_NAME",
+                  "query": "{Email}=\"{{input.body.Email}}\"",
+                  "view": null,
+                  "connectionId": "#CONN-1#",
+                  "apiKey": null
+                }
+              },
+              {
+                "alias": "Does it exist?",
+                "id": "ifThenCondition_nCGr",
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "BOOLEAN_CONDITION",
+                "params": {
+                  "evaluate": {
+                    "operator": "AND",
+                    "operands": [
+                      {
+                        "operator": "GT",
+                        "operands": [
+                          "{{length(listRecords.body.records)}}",
+                          "0"
+                        ]
+                      }
+                    ]
+                  },
+                  "then": [
+                    {
+                      "id": "updateARecord_sWk3",
+                      "alias": null,
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "AIRTABLE",
+                      "action": "UPDATE_RECORD",
+                      "params": {
+                        "baseId": "YOUR_BASE_ID",
+                        "tableName": "YOUR_TABLE_NAME",
+                        "recordId": "{{listRecords.body.records[0].id}}",
+                        "fields": {
+                          "Name": "{{input.body.Name}}",
+                          "Email": "{{input.body.Email}}",
+                          "Question 1": "{{input.body.choice_1}}",
+                          "Question 2": "{{input.body.choice_2}}",
+                          "Question 3": "{{input.body.choice_3}}"
+                        },
+                        "connectionId": "#CONN-1#",
+                        "apiKey": null
+                      }
+                    },
+                    {
+                      "alias": "Store record ID",
+                      "id": "storeStateVariable_PMLY",
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "FLOW",
+                      "action": "STORE_STATE",
+                      "params": {
+                        "data": {
+                          "recordID": "{{listRecords_pLXp.body.records[0].id}}"
+                        }
+                      }
+                    },
+                    {
+                      "id": "goToTheNextFormStep_vhgI",
+                      "alias": null,
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "FLOW",
+                      "action": "NEXT_STEP",
+                      "params": {}
+                    }
+                  ],
+                  "otherwise": [
+                    {
+                      "id": "createARecord_YEaD",
+                      "alias": null,
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "AIRTABLE",
+                      "action": "CREATE_RECORD",
+                      "params": {
+                        "baseId": "YOUR_BASE_ID",
+                        "tableName": "YOUR_TABLE_NAME",
+                        "fields": {
+                          "Name": "{{input.body.Name}}",
+                          "Email": "{{input.body.Email}}",
+                          "Question 1": "{{input.body.choice_1}}",
+                          "Question 2": "{{input.body.choice_2}}",
+                          "Question 3": "{{input.body.choice_3}}"
+                        },
+                        "connectionId": "#CONN-1#",
+                        "apiKey": null
+                      }
+                    },
+                    {
+                      "alias": "Store record ID",
+                      "id": "storeStateVariable_Jko9",
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "FLOW",
+                      "action": "STORE_STATE",
+                      "params": {
+                        "data": {
+                          "recordID": "{{createARecord_YEaD.body.id}}"
+                        }
+                      }
+                    },
+                    {
+                      "id": "goToTheNextFormStep_WdRE",
+                      "alias": null,
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "FLOW",
+                      "action": "NEXT_STEP",
+                      "params": {}
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "162575699451345",
+      "appId": "AIRTABLE",
+      "name": "Airtable - Test"
+    }
+  }
+}

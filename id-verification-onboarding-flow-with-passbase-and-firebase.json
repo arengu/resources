@@ -1,0 +1,316 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "ID verification with Passbase & Firebase",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [
+      {
+        "key": "passbaseId",
+        "value": null
+      }
+    ],
+    "steps": [
+      {
+        "id": "step_ZpIZ",
+        "name": "Email & Password",
+        "components": [
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "hint": null,
+            "category": "FIELD",
+            "type": "PASSWORD",
+            "required": true,
+            "transient": false,
+            "config": {
+              "minLength": 6,
+              "maxLength": null,
+              "hash": "NONE",
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_ggm2",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Next »"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "html_N8Ke",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div>\n<script\n  type=\"text/javascript\"\n  src=\"https://unpkg.com/@passbase/button\"\n></script>\n<!-- Place the code below where you want your button to appear -->\n<div id=\"passbase-button\"></div>\n<script type=\"text/javascript\">\n  Passbase.renderButton(\n    document.getElementById(\"passbase-button\"),\n    \"WToEmf14deLJ5vKGvEVWhNjgTXRl8eySa77K8zOCltPnZ3o2mIoUoNamBiZB5xyd\",\n    {\n      prefillAttributes: {\n \t\t\t \temail: \"{{fields.email}}\",\n\t\t\t},\n      onStart: () => {},\n      onError: (errorCode) => {},\n      onFinish: (identityAccessKey) => {\n      \t$form.setHiddenField('passbaseId', identityAccessKey);\n        $form.goForward();\n    \t},\n    }\n  );\n</script>\n<style>\n  #passbase-button {\n\t\tdisplay: flex;\n    place-content: center;\n  }\n</style></div>"
+            }
+          },
+          {
+            "id": "previous_button_cROH",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_p78O",
+        "name": "ID verification",
+        "beforeNext": {
+          "flowId": "#FLOW-2#"
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": null,
+      "session": {
+        "type": "FIREBASE",
+        "token": "{{state.token}}"
+      },
+      "callback": null,
+      "redirection": {
+        "delay": 2,
+        "target": "https://website/home "
+      }
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-2#": {
+      "name": "Firebase: Signup & Login",
+      "description": null,
+      "actions": [
+        {
+          "id": "ifThenCondition",
+          "alias": "Was there a Passbase ID?",
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "HAS_VALUE",
+                  "operands": [
+                    "{{input.body.passbaseId}}"
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "alias": "Create user in Firebase",
+                "id": "firebaseSignup",
+                "notes": null,
+                "allowFailure": false,
+                "type": "FIREBASE",
+                "action": "SIGNUP",
+                "params": {
+                  "connectionId": "#CONN-1#",
+                  "email": {
+                    "value": "{{input.body.email}}",
+                    "verified": true
+                  },
+                  "password": "{{input.body.password}}",
+                  "localId": null,
+                  "displayName": null,
+                  "phoneNumber": null
+                }
+              },
+              {
+                "alias": "Get login token for user",
+                "id": "issueAToken",
+                "notes": null,
+                "allowFailure": false,
+                "type": "FIREBASE",
+                "action": "PASSWORDLESS",
+                "params": {
+                  "connectionId": "#CONN-1#",
+                  "localId": "{{firebaseSignup.body.localId}}",
+                  "expiresIn": "5m",
+                  "claims": {}
+                }
+              },
+              {
+                "id": "storeStateVariable",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "token": "{{firebaseLogin.token}}"
+                  }
+                }
+              },
+              {
+                "id": "submitTheForm",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "alias": "Show \"failed verification\"",
+                "id": "showErrorMessage",
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "afseraer"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-1#": {
+      "name": "Firebase: Look up",
+      "description": null,
+      "actions": [
+        {
+          "id": "firebaseLookup",
+          "alias": "Find this email in Firebase",
+          "notes": null,
+          "allowFailure": false,
+          "type": "FIREBASE",
+          "action": "LOOKUP",
+          "params": {
+            "connectionId": "#CONN-1#",
+            "field": "email",
+            "value": "{{input.body.email}}"
+          }
+        },
+        {
+          "id": "ifThenCondition_az8C",
+          "alias": "Was there a result?",
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "HAS_VALUE",
+                  "operands": [
+                    "{{firebaseLookup.user}}"
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "showErrorMessage_9LEa",
+                "alias": "Show \"already registered\"",
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "Sorry, the email {{input.body.email}} is already registered."
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "goToTheNextFormStep",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "NEXT_STEP",
+                "params": {}
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "163395268414031222",
+      "appId": "FIREBASE",
+      "name": "Firebase #1"
+    }
+  }
+}
