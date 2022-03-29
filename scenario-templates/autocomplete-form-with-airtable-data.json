@@ -1,0 +1,592 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Data autocomplete with Airtable",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_DOno",
+        "name": "Email",
+        "components": [
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_pSj9",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "otp",
+            "label": "OTP",
+            "hint": null,
+            "category": "FIELD",
+            "type": "NUMBER",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "minValue": null,
+              "maxValue": null,
+              "format": "DECIMAL",
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_gfUg",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          },
+          {
+            "id": "previous_button_R46t",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_YU1L",
+        "name": "OTP",
+        "beforeNext": {
+          "flowId": "#FLOW-2#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "rich_text_QqhV",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Your profile data</h2>"
+            }
+          },
+          {
+            "id": "name",
+            "label": "Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.name}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "company",
+            "label": "Company",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.company}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "job",
+            "label": "Job title",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.job}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "phone",
+            "label": "Phone number",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.phone}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_5YRM",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Update data"
+            }
+          },
+          {
+            "id": "previous_button_Bndi",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_gQP2",
+        "name": "Details",
+        "beforeNext": {
+          "flowId": "#FLOW-3#"
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": "Thank you! Your form has been submitted successfully",
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 1,
+        "target": "{{state.claim_url}}"
+      }
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-2#": {
+      "name": "Verify OTP + Check Airtable",
+      "description": null,
+      "actions": [
+        {
+          "id": "verifyOTP",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "OTP",
+          "action": "VERIFY_CODE",
+          "params": {
+            "reference": "{{input.body.email}}",
+            "code": "{{input.body.otp}}"
+          }
+        },
+        {
+          "id": "ifThenCondition_nmjM",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{verifyOTP.valid}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "listRecords",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "AIRTABLE",
+                "action": "LIST_RECORDS",
+                "params": {
+                  "baseId": "BASE_ID",
+                  "tableName": "Profile",
+                  "query": "{email}=\"{{input.body.email}}\"",
+                  "view": null,
+                  "connectionId": "#CONN-1#",
+                  "apiKey": null
+                }
+              },
+              {
+                "alias": "Does it exist?",
+                "id": "ifThenCondition",
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "BOOLEAN_CONDITION",
+                "params": {
+                  "evaluate": {
+                    "operator": "AND",
+                    "operands": [
+                      {
+                        "operator": "EQ",
+                        "operands": [
+                          "{{listRecords.body.records[0].fields.email}}",
+                          "{{input.body.email}}"
+                        ]
+                      }
+                    ]
+                  },
+                  "then": [
+                    {
+                      "alias": "Store record ID",
+                      "id": "storeStateVariable_3FmA",
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "FLOW",
+                      "action": "STORE_STATE",
+                      "params": {
+                        "data": {
+                          "recordID": "{{listRecords.body.records[0].id}}",
+                          "name": "{{listRecords.body.records[0].fields.name}}",
+                          "email": "{{listRecords.body.records[0].fields.email}}",
+                          "company": "{{listRecords.body.records[0].fields.company}}",
+                          "job": "{{listRecords.body.records[0].fields.job}}",
+                          "phone": "{{listRecords.body.records[0].fields.phone}}"
+                        }
+                      }
+                    },
+                    {
+                      "id": "goToTheNextFormStep_yKo4",
+                      "alias": null,
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "FLOW",
+                      "action": "NEXT_STEP",
+                      "params": {}
+                    }
+                  ],
+                  "otherwise": [
+                    {
+                      "id": "createARecord_I2dC",
+                      "alias": null,
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "AIRTABLE",
+                      "action": "CREATE_RECORD",
+                      "params": {
+                        "baseId": "BASE_ID",
+                        "tableName": "Profile",
+                        "fields": {
+                          "email": "{{input.body.email}}"
+                        },
+                        "connectionId": "#CONN-1#",
+                        "apiKey": null
+                      }
+                    },
+                    {
+                      "alias": "Store record ID",
+                      "id": "storeStateVariable_G2k3",
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "FLOW",
+                      "action": "STORE_STATE",
+                      "params": {
+                        "data": {
+                          "recordID": "{{createARecord_I2dC.body.id}}"
+                        }
+                      }
+                    },
+                    {
+                      "id": "goToTheNextFormStep_09Z6",
+                      "alias": null,
+                      "notes": null,
+                      "allowFailure": false,
+                      "type": "FLOW",
+                      "action": "NEXT_STEP",
+                      "params": {}
+                    }
+                  ]
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "Sorry, but the code is not correct."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-1#": {
+      "name": "Generate & Send OTP",
+      "description": null,
+      "actions": [
+        {
+          "id": "login",
+          "alias": "Login",
+          "notes": null,
+          "allowFailure": false,
+          "type": "HTTP",
+          "action": "SEND_REQUEST",
+          "params": {
+            "url": "https://custom.demos.arengu.com/login",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer JnUjNjUmZWZLTW93NjFkOG8zeFRlI3NYbWphem5GZSZIMXlFSmVZeVlMRk03XjhCTGRBQUBAOEtvJDlGdnRNRg"
+            },
+            "params": {},
+            "type": "JSON",
+            "body": {
+              "sub": "{{input.body.email}}",
+              "auth_type": "none"
+            },
+            "acceptNOK": false,
+            "connectionId": null,
+            "basic": null
+          }
+        },
+        {
+          "id": "ifThenCondition",
+          "alias": "Is it success?",
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{login.success}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "storeStateVariable",
+                "alias": "Store claim URL link",
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "claim_url": "{{login.body.claim_url}}"
+                  }
+                }
+              },
+              {
+                "id": "generateOTP",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "OTP",
+                "action": "GENERATE_CODE",
+                "params": {
+                  "reference": "{{input.body.email}}",
+                  "length": 4
+                }
+              },
+              {
+                "id": "sendMailjetEmail_OTP",
+                "alias": "Send OTP",
+                "notes": null,
+                "allowFailure": false,
+                "type": "MAILJET",
+                "action": "SEND_EMAIL",
+                "params": {
+                  "sender": {
+                    "email": "acme@arengu.com",
+                    "name": null
+                  },
+                  "recipient": {
+                    "email": "{{input.body.email}}",
+                    "name": null
+                  },
+                  "trackActivity": false,
+                  "type": "HTML",
+                  "content": "<!doctype html><html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head><title></title><!--[if !mso]><!-- --><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><!--<![endif]--><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><style type=\"text/css\">#outlook a { padding:0; }\n          body { margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%; }\n          table, td { border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt; }\n          img { border:0;height:auto;line-height:100%; outline:none;text-decoration:none;-ms-interpolation-mode:bicubic; }\n          p { display:block;margin:13px 0; }</style><!--[if mso]>\n        <xml>\n        <o:OfficeDocumentSettings>\n          <o:AllowPNG/>\n          <o:PixelsPerInch>96</o:PixelsPerInch>\n        </o:OfficeDocumentSettings>\n        </xml>\n        <![endif]--><!--[if lte mso 11]>\n        <style type=\"text/css\">\n          .mj-outlook-group-fix { width:100% !important; }\n        </style>\n        <![endif]--><!--[if !mso]><!--><link href=\"https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700\" rel=\"stylesheet\" type=\"text/css\"><style type=\"text/css\">@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700);</style><!--<![endif]--><style type=\"text/css\">@media only screen and (min-width:480px) {\n        .mj-column-per-100 { width:100% !important; max-width: 100%; }\n      }</style><style type=\"text/css\">@media only screen and (max-width:480px) {\n      table.mj-full-width-mobile { width: 100% !important; }\n      td.mj-full-width-mobile { width: auto !important; }\n    }</style></head><body style=\"background-color:#fafbfc;\"><div style=\"background-color:#fafbfc;\"><!--[if mso | IE]><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"\" style=\"width:600px;\" width=\"600\" ><tr><td style=\"line-height:0px;font-size:0px;mso-line-height-rule:exactly;\"><![endif]--><div style=\"margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\"><tbody><tr><td style=\"direction:ltr;font-size:0px;padding:20px 0;padding-bottom:20px;padding-top:20px;text-align:center;\"><!--[if mso | IE]><table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"\" style=\"vertical-align:middle;width:600px;\" ><![endif]--><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:middle;\" width=\"100%\"><tr><td align=\"center\" style=\"font-size:0px;padding:25px;word-break:break-word;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse:collapse;border-spacing:0px;\"><tbody><tr><td style=\"width:125px;\"><img height=\"auto\" src=\"https://uploads-ssl.webflow.com/5f059a21d0c1c3278fe69842/5f188b94aebb5983b66610dd_logo-arengu.png\" style=\"border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;\" width=\"125\"></td></tr></tbody></table></td></tr></table></div><!--[if mso | IE]></td></tr></table><![endif]--></td></tr></tbody></table></div><!--[if mso | IE]></td></tr></table><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"\" style=\"width:600px;\" width=\"600\" ><tr><td style=\"line-height:0px;font-size:0px;mso-line-height-rule:exactly;\"><![endif]--><div style=\"background:#ffffff;background-color:#ffffff;margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background:#ffffff;background-color:#ffffff;width:100%;\"><tbody><tr><td style=\"direction:ltr;font-size:0px;padding:20px 0;padding-bottom:20px;padding-top:20px;text-align:center;\"><!--[if mso | IE]><table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"\" style=\"vertical-align:middle;width:600px;\" ><![endif]--><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:middle;\" width=\"100%\"><tr><td align=\"center\" style=\"font-size:0px;padding:10px 25px;padding-right:25px;padding-left:25px;word-break:break-word;\"><div style=\"font-family:open Sans Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:center;color:#000000;\"><span>Hello,</span></div></td></tr><tr><td align=\"center\" style=\"font-size:0px;padding:10px 25px;padding-right:25px;padding-left:25px;word-break:break-word;\"><div style=\"font-family:open Sans Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:center;color:#000000;\">Please use the verification code below on the Arengu website:</div></td></tr><tr><td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\"><div style=\"font-family:open Sans Helvetica, Arial, sans-serif;font-size:24px;font-weight:bold;line-height:1;text-align:center;color:#000000;\">{{generateOTP.code}}</div></td></tr><tr><td align=\"center\" style=\"font-size:0px;padding:10px 25px;padding-right:16px;padding-left:25px;word-break:break-word;\"><div style=\"font-family:open Sans Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:center;color:#000000;\">If you didn't request this, you can ignore this email or let us know.</div></td></tr><tr><td align=\"center\" style=\"font-size:0px;padding:10px 25px;padding-right:25px;padding-left:25px;word-break:break-word;\"><div style=\"font-family:open Sans Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:center;color:#000000;\">Thanks!<br>Arengu team</div></td></tr></table></div><!--[if mso | IE]></td></tr></table><![endif]--></td></tr></tbody></table></div><!--[if mso | IE]></td></tr></table><![endif]--></div></body></html>",
+                  "templateId": null,
+                  "variables": {},
+                  "subject": "{{generateOTP.code}} is your code",
+                  "connectionId": "#CONN-2#",
+                  "apiKey": null,
+                  "secretKey": null,
+                  "cc": null
+                }
+              },
+              {
+                "id": "goToTheNextFormStep",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "NEXT_STEP",
+                "params": {}
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_pus0",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "Sorry, but this email is not registered."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-3#": {
+      "name": "Update data in Airtable",
+      "description": null,
+      "actions": [
+        {
+          "id": "updateARecord",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "AIRTABLE",
+          "action": "UPDATE_RECORD",
+          "params": {
+            "baseId": "BASE_ID",
+            "tableName": "Profile",
+            "recordId": "{{state.recordID}}",
+            "fields": {
+              "name": "{{input.body.name}}",
+              "email": "{{input.body.email}}",
+              "company": "{{input.body.company}}",
+              "job": "{{input.body.job}}",
+              "phone": "{{input.body.phone}}"
+            },
+            "connectionId": "#CONN-1#",
+            "apiKey": null
+          }
+        },
+        {
+          "id": "submitTheForm_31Do",
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "SUBMIT_FORM",
+          "params": {
+            "endingScreen": true
+          },
+          "alias": null,
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "164674073405862585",
+      "appId": "AIRTABLE",
+      "name": "Airtable #1"
+    },
+    "#CONN-2#": {
+      "id": "163335699056615366",
+      "appId": "MAILJET",
+      "name": "Mailjet #1"
+    }
+  }
+}

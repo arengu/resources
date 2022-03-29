@@ -1,0 +1,341 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Data autocomplete with HubSpot",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "components": [
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_IkIv",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          },
+          {
+            "id": "previous_button_8TEF",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_zj9B",
+        "name": "Email",
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "rich_text_QqhV",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Your profile data</h2>"
+            }
+          },
+          {
+            "id": "name",
+            "label": "Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.name}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "job",
+            "label": "Job title",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.job}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "phone",
+            "label": "Phone number",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": "{{state.phone}}",
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_5YRM",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Update data"
+            }
+          },
+          {
+            "id": "previous_button_Bndi",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_gQP2",
+        "name": "Profile data",
+        "beforeNext": {
+          "flowId": "#FLOW-2#"
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": "Thank you! Your form has been submitted successfully",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Check contact in HubSpot",
+      "description": null,
+      "actions": [
+        {
+          "alias": "Check contact email",
+          "id": "httpRequest",
+          "notes": null,
+          "allowFailure": false,
+          "type": "HTTP",
+          "action": "SEND_REQUEST",
+          "params": {
+            "url": "https://api.hubapi.com/contacts/v1/contact/email/{{input.body.email}}/profile?hapikey=YOUR_API_KEY&propertyMode=value_only",
+            "method": "GET",
+            "headers": {},
+            "params": {
+              "email": "{{input.body.email}}"
+            },
+            "acceptNOK": false,
+            "connectionId": null,
+            "basic": null,
+            "body": null,
+            "type": "JSON"
+          }
+        },
+        {
+          "alias": "Is it a contact?",
+          "id": "ifThenCondition",
+          "notes": null,
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{httpRequest.body.is-contact}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "alias": "Store contact data",
+                "id": "storeStateVariable_true",
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "email": "{{httpRequest.body.properties.email.value}}",
+                    "name": "{{httpRequest.body.properties.firstname.value}}",
+                    "job": "{{httpRequest.body.properties.jobtitle.value}}",
+                    "phone": "{{httpRequest.body.properties.phone.value}}"
+                  }
+                }
+              },
+              {
+                "id": "goToTheNextFormStep_yKo4",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "NEXT_STEP",
+                "params": {}
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "createOrUpdateContact",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "HUBSPOT",
+                "action": "UPSERT_CONTACT",
+                "params": {
+                  "email": "{{input.body.email}}",
+                  "properties": [
+                    {
+                      "property": "email",
+                      "value": "{{input.body.email}}"
+                    }
+                  ],
+                  "connectionId": "#CONN-1#",
+                  "apiKey": null
+                }
+              },
+              {
+                "id": "goToTheNextFormStep_09Z6",
+                "alias": null,
+                "notes": null,
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "NEXT_STEP",
+                "params": {}
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-2#": {
+      "name": "Update contact in HubSpot",
+      "description": null,
+      "actions": [
+        {
+          "id": "createOrUpdateContact",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "HUBSPOT",
+          "action": "UPSERT_CONTACT",
+          "params": {
+            "email": "{{input.body.email}}",
+            "properties": [
+              {
+                "value": "{{input.body.name}}",
+                "property": "firstname"
+              },
+              {
+                "property": "jobtitle",
+                "value": "{{input.body.job}}"
+              },
+              {
+                "property": "phone",
+                "value": "{{input.body.phone}}"
+              }
+            ],
+            "connectionId": "#CONN-1#",
+            "apiKey": null
+          }
+        },
+        {
+          "id": "submitTheForm_sFms",
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "SUBMIT_FORM",
+          "params": {
+            "endingScreen": true
+          },
+          "alias": null,
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "162867683122726262",
+      "appId": "HUBSPOT",
+      "name": "HubSpot #1"
+    }
+  }
+}

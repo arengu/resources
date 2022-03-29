@@ -1,0 +1,18 @@
+<mjml>
+ <mj-body background-color="#fafbfc">
+   <mj-section padding-bottom="20px" padding-top="20px">
+     <mj-column vertical-align="middle" width="100%">
+       <mj-image align="center" padding="25px" src="https://global-uploads.webflow.com/5f059a21d0c1c3278fe69842/5f188b94aebb5983b66610dd_logo-arengu.png" width="125px"></mj-image>
+     </mj-column>
+   </mj-section>
+   <mj-section background-color="#fff" padding-bottom="20px" padding-top="20px">
+     <mj-column vertical-align="middle" width="100%">
+       <mj-text align="center" font-size="24px" font-weight="600" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px"><span>Welcome to Arengu! 👋</span></mj-text>
+       <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">We just wanted to give you a warm welcome and reach out to ease your onboarding.</mj-text>
+       <mj-button align="center" font-size="18px" background-color="#20c5a0" border-radius="8px" color="#fff" font-family="open Sans Helvetica, Arial, sans-serif" href="{{PASSWORD_RESET_LINK}}">Go to your account</mj-button>
+       <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">You can check out <a href="https://www.arengu.com/tutorials" style="color:#20c5a0">tutorials</a> to get the most out of Arengu or you can just reply with any doubts or feedback you have.</mj-text>
+       <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">Happy onboarding! <br />Arengu team</mj-text>
+     </mj-column>
+   </mj-section>
+ </mj-body>
+</mjml>

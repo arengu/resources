@@ -1,0 +1,26 @@
+<mjml>
+<mj-body background-color="#fafbfc">
+  <mj-section padding-bottom="20px" padding-top="20px">
+    <mj-column vertical-align="middle" width="100%">
+      <mj-image align="center" padding="25px" src="https://global-uploads.webflow.com/5f059a21d0c1c3278fe69842/5f188b94aebb5983b66610dd_logo-arengu.png" width="125px"></mj-image>
+    </mj-column>
+  </mj-section>
+  <mj-section background-color="#fff" padding-bottom="20px" padding-top="20px">
+    <mj-column vertical-align="middle" width="100%">
+      <mj-text align="center" font-size="24px"  font-weight="600" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px"><span>Hi, Debbie! 👋</span></mj-text>
+      <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">We just wanted to give you a warm welcome from Arengu’s team and personally reach out to ease your onboarding with some useful content:</mj-text>
+      <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif">
+        <a href="https://www.arengu.com/docs/quick-start" style="color:#20c5a0;">Getting started with your first flow</a>
+      </mj-text>
+       <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif">
+        <a href="https://www.arengu.com/docs/forms-with-flows" style="color:#20c5a0;">How to add server-side logic in your flows</a>
+      </mj-text>
+       <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif">
+        <a href="https://www.arengu.com/blog/guide-trending-authentication-and-signup-flows" style="color:#20c5a0;">Trending authentication and onboarding flows</a>
+      </mj-text>
+      <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">You can always check out our <a href="https://www.arengu.com/tutorials" style="color:#20c5a0">tutorials</a> for some inspiration or just reply this email with any doubts or feedback you have.</mj-text>
+      <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">Happy onboarding! <br />Arengu team</mj-text>
+    </mj-column>
+  </mj-section>
+</mj-body>
+</mjml>

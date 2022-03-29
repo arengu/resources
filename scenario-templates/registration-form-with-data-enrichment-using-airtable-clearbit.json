@@ -1,0 +1,249 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Sign-up with data enrichment (Airtable)",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_EDbj",
+        "name": "Basic details",
+        "components": [
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "hint": null,
+            "category": "FIELD",
+            "type": "PASSWORD",
+            "required": true,
+            "transient": true,
+            "config": {
+              "hash": "NONE",
+              "placeholder": null,
+              "minLength": 0,
+              "maxLength": null,
+              "config": {
+                "hash": "NONE",
+                "placeholder": null,
+                "minLength": 0,
+                "maxLength": null
+              }
+            }
+          },
+          {
+            "id": "next_button_fWKN",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Sign up"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": null
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": "#FLOW-1#"
+    },
+    "afterSubmit": {
+      "flowId": "#FLOW-2#",
+      "email": null
+    },
+    "ending": {
+      "content": "Thank you for registering!",
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 1,
+        "target": "https://example.com/main-page"
+      }
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Sign-up flow",
+      "description": null,
+      "actions": [
+        {
+          "id": "signupRequest",
+          "alias": "Signup with custom API",
+          "allowFailure": false,
+          "notes": null,
+          "type": "HTTP",
+          "action": "SEND_REQUEST",
+          "params": {
+            "url": "https://custom.demos.arengu.com/signup",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer JnUjNjUmZWZLTW93NjFkOG8zeFRlI3NYbWphem5GZSZIMXlFSmVZeVlMRk03XjhCTGRBQUBAOEtvJDlGdnRNRg"
+            },
+            "params": {},
+            "type": "JSON",
+            "body": {
+              "sub": "{{input.body.email}}",
+              "password": "{{input.body.password}}"
+            },
+            "acceptNOK": false,
+            "connectionId": null,
+            "basic": null
+          }
+        },
+        {
+          "id": "checkSignup",
+          "alias": "Is it success?",
+          "allowFailure": false,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{signupRequest.success}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "submitTheForm_u5ne",
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                },
+                "alias": null,
+                "notes": null
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "returnError_88rE",
+                "alias": "Return custom error message",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "User or password are not valid."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-2#": {
+      "name": "Send enriched data to Airtable",
+      "description": null,
+      "actions": [
+        {
+          "id": "findPersonAndCompanyByEmail",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "CLEARBIT",
+          "action": "FIND_PERSON",
+          "params": {
+            "email": "{{input.body.email}}",
+            "connectionId": "#CONN-1#",
+            "secretKey": null
+          }
+        },
+        {
+          "id": "createARecord",
+          "allowFailure": true,
+          "alias": null,
+          "notes": null,
+          "type": "AIRTABLE",
+          "action": "CREATE_RECORD",
+          "params": {
+            "baseId": "BASE_ID",
+            "tableName": "Users",
+            "fields": {
+              "name": "{{findPersonAndCompanyByEmail.body.person.name.fullName}}",
+              "email": "{{input.body.email}}",
+              "company": "{{findPersonAndCompanyByEmail.body.company.name}}",
+              "title": "{{findPersonAndCompanyByEmail.body.person.employment.title}}",
+              "country": "{{findPersonAndCompanyByEmail.body.person.geo.country}}"
+            },
+            "connectionId": "#CONN-2#",
+            "apiKey": null
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": false,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-2#": {
+      "id": "164674073405862585",
+      "appId": "AIRTABLE",
+      "name": "Airtable #1"
+    },
+    "#CONN-1#": {
+      "id": "164674072471888195",
+      "appId": "CLEARBIT",
+      "name": "Clearbit #2"
+    }
+  }
+}

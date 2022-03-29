@@ -1,0 +1,19 @@
+<mjml>
+ <mj-body background-color="#fafbfc">
+   <mj-section padding-bottom="20px" padding-top="20px">
+     <mj-column vertical-align="middle" width="100%">
+       <mj-image align="center" padding="25px" src="https://global-uploads.webflow.com/5f059a21d0c1c3278fe69842/5f188b94aebb5983b66610dd_logo-arengu.png" width="125px"></mj-image>
+     </mj-column>
+   </mj-section>
+   <mj-section background-color="#fff" padding-bottom="20px" padding-top="20px">
+     <mj-column vertical-align="middle" width="100%">
+       <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px"><span>Hello,</span></mj-text>
+       <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">You have requested us to send a magic link to automatically sign in to Arengu.</mj-text>
+       <mj-button align="center" font-size="18px" background-color="#20c5a0" border-radius="8px" color="#fff" font-family="open Sans Helvetica, Arial, sans-serif" href="{{MAGIC_LINK}}">Click here to sign in</mj-button>
+       <mj-text align="center" font-size="8px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">Or copy this URL into your browser:<br></br><a href="{{MAGIC_LINK}}">{{MAGIC_LINK}}</a></mj-text>
+       <mj-text align="center" font-size="8px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">(This link will expire in 5 minutes)</mj-text>
+       <mj-text align="center" font-size="16px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">Thanks! <br />Arengu team</mj-text>
+     </mj-column>
+   </mj-section>
+ </mj-body>
+</mjml>
