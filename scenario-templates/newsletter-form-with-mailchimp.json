@@ -43,7 +43,7 @@
             "required": true,
             "transient": false,
             "config": {
-              "text": "<p>I agree to the <a href=\"https://www.arengu.com/privacy-policy.html\" target=\"_blank\">privacy policy</a></p>"
+              "text": "<p>I agree to the privacy policy</p>"
             }
           },
           {
