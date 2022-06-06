@@ -1,0 +1,175 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Request a demo with Calendly",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "default",
+        "name": "Basic details",
+        "components": [
+          {
+            "id": "rich_text_ZU8k",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Schedule a demo</h2><p>A 15-minute demo with our product experts.</p>"
+            }
+          },
+          {
+            "id": "name",
+            "label": "Full name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "minLength": 0,
+              "defaultValue": null,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Work email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "role",
+            "label": "What role describes you better?",
+            "hint": null,
+            "category": "FIELD",
+            "type": "DROPDOWN",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiple": false,
+              "options": [
+                {
+                  "label": "Founder / CEO",
+                  "value": "Founder / CEO"
+                },
+                {
+                  "label": "Technical founder",
+                  "value": "Technical founder"
+                },
+                {
+                  "label": "Software developer",
+                  "value": "Software developer"
+                },
+                {
+                  "label": "Growth / Marketing",
+                  "value": "Growth / Marketing"
+                },
+                {
+                  "label": "Other",
+                  "value": "Other"
+                }
+              ],
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "message",
+            "label": "How can we help?",
+            "hint": "<p>Remember the more details you give us, the easier it is for us to help you.</p>",
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": true,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_qOw9",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Schedule a demo"
+            }
+          },
+          {
+            "id": "html_4tGC",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<script type=\"text/javascript\" src=\"https://assets.calendly.com/assets/external/widget.js\"></script>\n"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": null
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "html_fNGu",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"calendly-inline-widget\" style=\"min-width:320px;height:800px;\" data-auto-load=\"false\"></div>\n<script>\n  Calendly.initInlineWidget({\n    url: 'https://calendly.com/jacobo-vidal/discovery?hide_event_type_details=1',\n    parentElement: document.querySelector('.calendly-inline-widget'),\n    prefill: {\n      name: '{{fields.name}}',\n      email: '{{fields.email}}'\n    }\n  });\n</script>\n<script>\n  function isCalendlyEvent(e) {\n    return e.data.event && e.data.event.indexOf('calendly') === 0;\n  };\n\n  window.addEventListener(\n    'message',\n    function (e) {\n      if (isCalendlyEvent(e) && e.data.event === 'calendly.event_scheduled') {\n        $form.goForward();\n      }\n    }\n  );\n</script>"
+            }
+          }
+        ],
+        "id": "step_KsZ8",
+        "name": "Book a demo",
+        "beforeNext": {
+          "flowId": null
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "flowId": null,
+      "email": null
+    },
+    "ending": {
+      "content": "<div class=\"demo-success-container\"><span class=\"demo-success-icon\"></span>\n<p class=\"u-margin-bottom__small\">Thank you very much! You've successfully booked a demo.</p></div>",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {
+      "primaryColor": "#20c5a0",
+      "body": {
+        "fontFamily": "Inter, sans-serif"
+      }
+    },
+    "persistence": {
+      "submissions": true,
+      "logIP": true
+    },
+    "tags": []
+  },
+  "flows": {},
+  "connections": {}
+}

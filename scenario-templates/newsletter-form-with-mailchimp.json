@@ -1,0 +1,137 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Newsletter form",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_yFaN",
+        "name": "Email step",
+        "components": [
+          {
+            "id": "rich_text_Y6a7",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Subscribe to our newsletter</h2><p>Subscribe to our email newsletter to receive article notifications and regular product updates.</p>"
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "legal",
+            "label": null,
+            "hint": null,
+            "category": "FIELD",
+            "type": "LEGAL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "text": "<p>I agree to the <a href=\"https://www.arengu.com/privacy-policy.html\" target=\"_blank\">privacy policy</a></p>"
+            }
+          },
+          {
+            "id": "next_button_h2i9",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Subscribe to newsletter"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": null
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "flowId": "#FLOW-1#",
+      "email": null
+    },
+    "ending": {
+      "content": "Thank you! You have succesfully been subscribed to our newsletter.",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Newsletter - Subscribe to MailChimp",
+      "description": null,
+      "actions": [
+        {
+          "id": "newsletterSubscribe",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "MAILCHIMP",
+          "action": "UPSERT_MEMBER",
+          "params": {
+            "connectionId": "#CONN-1#",
+            "listId": "PLACE_YOUR_MAILCHIMP_LIST_ID_HERE",
+            "member": {
+              "email_address": "{{input.body.email}}",
+              "merge_fields": {},
+              "status_if_new": "subscribed"
+            },
+            "host": null,
+            "apiKey": null
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": false,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165451104435981083",
+      "appId": "MAILCHIMP",
+      "name": "Arengu test environment"
+    }
+  }
+}

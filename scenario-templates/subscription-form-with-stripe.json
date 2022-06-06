@@ -1,0 +1,144 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Subscription payment",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_jzzn",
+        "name": "Payment details",
+        "components": [
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "plan",
+            "label": "Choose your plan",
+            "hint": "⚠️ Add your price IDs as internal values selecting this field and under Options &gt; Advanced &gt; Internal values.",
+            "category": "FIELD",
+            "type": "CHOICE",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiple": false,
+              "options": [
+                {
+                  "label": "Basic - $9.99 monthly",
+                  "value": "your_basic_plan_price_id"
+                },
+                {
+                  "label": "Premium - $19.99 monthly",
+                  "value": "your_premium_plan_price_id"
+                }
+              ],
+              "allowOther": null,
+              "defaultValue": null
+            }
+          },
+          {
+            "id": "payment",
+            "label": null,
+            "hint": null,
+            "category": "FIELD",
+            "type": "PAYMENT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "provider": "STRIPE",
+              "charge": {
+                "type": "SUBSCRIPTION",
+                "subscription": {
+                  "planIds": [
+                    "{{fields.plan}}"
+                  ],
+                  "taxRates": [],
+                  "coupon": null,
+                  "trialDays": null
+                }
+              },
+              "credentials": {
+                "publicKey": "PLACE_YOUR_PUBLISHABLE_KEY",
+                "privateKey": "PLACE_YOUR_SECRET_KEY"
+              },
+              "customer": {
+                "email": "{{fields.email}}",
+                "description": null,
+                "metadata": null,
+                "shipping": null
+              },
+              "fields": {
+                "cardNumber": {
+                  "label": "Credit or debit card",
+                  "placeholder": "1234 1234 1234 1234"
+                },
+                "expirationDate": {
+                  "label": "Expiration date",
+                  "placeholder": "MM / YY"
+                },
+                "securityCode": {
+                  "label": "Security code",
+                  "placeholder": "CVC"
+                },
+                "trustmarks": true
+              }
+            }
+          },
+          {
+            "id": "next_button_N0Mx",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Subscribe"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": null
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": "Thank you! You have successfully subscribed to our plan.",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {},
+  "connections": {}
+}

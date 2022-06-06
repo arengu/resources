@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Contact form",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_Jrdb",
+        "name": "Contact details",
+        "components": [
+          {
+            "id": "rich_text_TLT4",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Get in touch</h2><p>Someone from our team will reach out shortly.</p>"
+            }
+          },
+          {
+            "id": "full_name",
+            "label": "Full name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Work email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "text_P4sv",
+            "label": "Message",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "placeholder": "Remember the more details you give us, the easier it is for us to help you.",
+              "multiline": true,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null
+            }
+          },
+          {
+            "id": "next_button_vtwq",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Send message"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": null
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": "Thank you! Your message has been submitted successfully. We look forward to getting in touch and will reach out shortly.",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {},
+  "connections": {}
+}
