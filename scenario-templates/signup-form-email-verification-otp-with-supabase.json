@@ -18,7 +18,7 @@
             "category": "BLOCK",
             "type": "HTML",
             "config": {
-              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span></span>\n  <span></span>\n</div>\n<style>\n  .stepper span {\n    background: #E7E9ED;\n    height: 3px;\n    width: 100%;\n    display: flex;\n    margin-right: 4px;\n  }\n\n  .stepper {\n    display: inline-flex;\n    width: 100%;\n  }\n\n  .stepper span:last-child {\n    margin-right: 0;\n  }\n\n  .stepper span.filled {\n    background: var(--primary-color);\n  }\n</style>"
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span></span>\n</div>\n<style>\n  .stepper span {\n    background: #E7E9ED;\n    height: 3px;\n    width: 100%;\n    display: flex;\n    margin-right: 4px;\n  }\n\n  .stepper {\n    display: inline-flex;\n    width: 100%;\n  }\n\n  .stepper span:last-child {\n    margin-right: 0;\n  }\n\n  .stepper span.filled {\n    background: var(--primary-color);\n  }\n</style>"
             }
           },
           {
@@ -97,7 +97,7 @@
             "category": "BLOCK",
             "type": "HTML",
             "config": {
-              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span class=\"filled\"></span>\n  <span></span>\n</div>"
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span class=\"filled\"></span>\n</div>"
             }
           },
           {
