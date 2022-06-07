@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "form": {
-    "name": "Airtable - Update records with email verification",
+    "name": "Airtable - Update/edit records with email authentication",
     "description": null,
     "messages": {
       "errors": {},
@@ -253,7 +253,7 @@
   },
   "flows": {
     "#FLOW-1#": {
-      "name": "Generate & Send OTP",
+      "name": "Check users and generate OTP",
       "description": null,
       "actions": [
         {
@@ -264,8 +264,8 @@
           "type": "AIRTABLE",
           "action": "LIST_RECORDS",
           "params": {
-            "baseId": "appViM4ieiKgktEFv",
-            "tableName": "tblMlIZtQCacyDouT",
+            "baseId": "REPLACE_WITH_YOUR_BASE_ID",
+            "tableName": "REPLACE_WITH_YOUR_TABLE_NAME",
             "query": "{Email}=\"{{input.body.email}}\"",
             "connectionId": "#CONN-1#",
             "apiKey": null,
@@ -325,6 +325,8 @@
               {
                 "id": "sendEmail_crW8",
                 "allowFailure": false,
+                "alias": null,
+                "notes": null,
                 "type": "EMAIL",
                 "action": "SEND_EMAIL",
                 "params": {
@@ -337,21 +339,19 @@
                   },
                   "subject": "{{generateOtp.code}} is you verification code",
                   "content": "<p>Hello,</p>\n<p>Please use the verification code below on the website:</p>\n<p><b>{{generateOtp.code}}</b></p>\n<p>If you didn't request this, you can ignore this email or let us know.</p>\n"
-                },
-                "alias": null,
-                "notes": null
+                }
               },
               {
                 "id": "jumpToAFormStep_4H9l",
                 "allowFailure": false,
+                "alias": null,
+                "notes": null,
                 "type": "FLOW",
                 "action": "JUMP_TO_STEP",
                 "params": {
                   "formId": "165460196262572484",
                   "stepId": "step_YU1L"
-                },
-                "alias": null,
-                "notes": null
+                }
               }
             ],
             "otherwise": [
@@ -367,6 +367,58 @@
                 }
               }
             ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-3#": {
+      "name": "Update data in Airtable",
+      "description": null,
+      "actions": [
+        {
+          "id": "updateARecord",
+          "alias": null,
+          "notes": null,
+          "allowFailure": false,
+          "type": "AIRTABLE",
+          "action": "UPDATE_RECORD",
+          "params": {
+            "baseId": "REPLACE_WITH_YOUR_BASE_ID",
+            "tableName": "REPLACE_WITH_TABLE_NAME",
+            "recordId": "{{state.record_id}}",
+            "fields": {
+              "full_name": "{{input.body.full_name}}",
+              "email": "{{input.body.email}}",
+              "company_name": "{{input.body.company_name}}",
+              "job_title": "{{input.body.job_title}}",
+              "phone": "{{input.body.phone.internationalNumber}}"
+            },
+            "connectionId": "#CONN-1#",
+            "apiKey": null
+          }
+        },
+        {
+          "id": "submitTheForm_31Do",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "FLOW",
+          "action": "SUBMIT_FORM",
+          "params": {
+            "endingScreen": true
           }
         }
       ],
@@ -447,58 +499,6 @@
                 }
               }
             ]
-          }
-        }
-      ],
-      "triggers": {
-        "webhook": {
-          "enabled": false,
-          "secret": null
-        },
-        "submission": {
-          "formIds": []
-        }
-      },
-      "synchronous": true,
-      "security": {
-        "rateLimits": []
-      }
-    },
-    "#FLOW-3#": {
-      "name": "Update data in Airtable",
-      "description": null,
-      "actions": [
-        {
-          "id": "updateARecord",
-          "alias": null,
-          "notes": null,
-          "allowFailure": false,
-          "type": "AIRTABLE",
-          "action": "UPDATE_RECORD",
-          "params": {
-            "baseId": "REPLACE_WITH_YOUR_BASE_ID",
-            "tableName": "REPLACE_WITH_TABLE_NAME",
-            "recordId": "{{state.record_id}}",
-            "fields": {
-              "full_name": "{{input.body.full_name}}",
-              "email": "{{input.body.email}}",
-              "company_name": "{{input.body.company_name}}",
-              "job_title": "{{input.body.job_title}}",
-              "phone": "{{input.body.phone.internationalNumber}}"
-            },
-            "connectionId": "#CONN-1#",
-            "apiKey": null
-          }
-        },
-        {
-          "id": "submitTheForm_31Do",
-          "allowFailure": false,
-          "alias": null,
-          "notes": null,
-          "type": "FLOW",
-          "action": "SUBMIT_FORM",
-          "params": {
-            "endingScreen": true
           }
         }
       ],
