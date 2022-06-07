@@ -1,0 +1,285 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "PrestaShop - Signup with email and password",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_T2HC",
+        "name": "Basic details",
+        "components": [
+          {
+            "id": "social",
+            "label": null,
+            "hint": null,
+            "category": "FIELD",
+            "type": "SOCIAL",
+            "transient": false,
+            "config": {},
+            "required": false
+          },
+          {
+            "id": "divider_dS0h",
+            "category": "BLOCK",
+            "type": "DIVIDER",
+            "config": {
+              "text": "Or"
+            }
+          },
+          {
+            "id": "firstName",
+            "label": "First name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "lastName",
+            "label": "Last name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "hint": null,
+            "category": "FIELD",
+            "type": "PASSWORD",
+            "required": true,
+            "transient": true,
+            "config": {
+              "hash": "NONE",
+              "config": {
+                "hash": "NONE",
+                "placeholder": null,
+                "minLength": 0,
+                "maxLength": null
+              }
+            }
+          },
+          {
+            "id": "next_button_aYpI",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Sign up"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": null,
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 0,
+        "target": "{{state.redirectionUrl}}"
+      }
+    },
+    "status": null,
+    "social": [
+      {
+        "text": "Sign up with Google",
+        "scopes": [
+          "email"
+        ],
+        "clientId": "209631508019-qadn9kom0gnai47amk38m74gcsdivino.apps.googleusercontent.com",
+        "provider": "GOOGLE",
+        "disableValidation": false
+      },
+      {
+        "text": "Sign up with Facebook",
+        "scopes": [
+          "email"
+        ],
+        "clientId": "570898253689206",
+        "provider": "FACEBOOK",
+        "disableValidation": false
+      }
+    ],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Signup flow",
+      "description": null,
+      "actions": [
+        {
+          "id": "signup",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "PRESTASHOP",
+          "action": "SIGNUP",
+          "params": {
+            "connectionId": "#CONN-1#",
+            "firstName": "{{input.body.firstName ?? input.body.social.profile.given_name}}",
+            "lastName": "{{input.body.lastName ?? input.body.social.profile.family_name}}",
+            "email": "{{input.body.email ?? input.body.social.profile.email}}",
+            "password": "{{input.body.password}}",
+            "expiresIn": "5m",
+            "meta": {},
+            "baseUrl": null,
+            "apiKey": null,
+            "redirectUri": null
+          }
+        },
+        {
+          "id": "checkSignup",
+          "alias": "Is it success?",
+          "allowFailure": false,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{signup.success}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "generateToken",
+                "allowFailure": false,
+                "type": "PRESTASHOP",
+                "action": "PASSWORDLESS",
+                "params": {
+                  "email": "{{input.body.email ?? input.body.social.profile.email}}",
+                  "expiresIn": "5m",
+                  "connectionId": "#CONN-1#",
+                  "baseUrl": null,
+                  "apiKey": null,
+                  "redirectUri": null
+                },
+                "alias": null,
+                "notes": null
+              },
+              {
+                "id": "storeState_sURW",
+                "alias": "Store data for ending screen",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "redirectionUrl": "{{generateToken.body.login_url}}"
+                  }
+                }
+              },
+              {
+                "id": "submitForm_ZQC2",
+                "alias": "Go to ending screen",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "returnError_CSz1",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "{{signup.body.error_message}}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165458475199459371",
+      "appId": "PRESTASHOP",
+      "name": "Arengu test environment"
+    }
+  }
+}
