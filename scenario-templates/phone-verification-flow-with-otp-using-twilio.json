@@ -1,0 +1,336 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Twilio - OTP flow",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_SO1S",
+        "name": "WhatsApp number",
+        "components": [
+          {
+            "id": "html_VEKo",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span></span>\n</div>\n<style>\n  .stepper span {\n    background: #E7E9ED;\n    height: 3px;\n    width: 100%;\n    display: flex;\n    margin-right: 4px;\n  }\n\n  .stepper {\n    display: inline-flex;\n    width: 100%;\n  }\n\n  .stepper span:last-child {\n    margin-right: 0;\n  }\n\n  .stepper span.filled {\n    background: var(--primary-color);\n  }\n</style>"
+            }
+          },
+          {
+            "id": "rich_text_XjH0",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Phone details</h2><p>Enter your phone number to verify your account.</p>"
+            }
+          },
+          {
+            "id": "phone",
+            "label": "Phone number",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "countryPicker": true,
+              "translations": {
+                "filterPlaceholder": null
+              },
+              "placeholder": null,
+              "defaultCC": null,
+              "allowedCountries": [],
+              "forbiddenCountries": [],
+              "minLength": 0,
+              "maxLength": null
+            }
+          },
+          {
+            "id": "next_button_oF6q",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Continue"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "html_cZqk",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span class=\"filled\"></span>\n</div>"
+            }
+          },
+          {
+            "id": "rich_text_C3aD",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Phone verification</h2><p>Please enter the 4-digit verification code that was sent to <strong>{{fields.phone}}</strong>. The code is valid for 30 minutes.</p>"
+            }
+          },
+          {
+            "id": "verification_code",
+            "label": "Verification code",
+            "hint": null,
+            "category": "FIELD",
+            "type": "NUMBER",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "minValue": null,
+              "maxValue": null,
+              "format": "DECIMAL",
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_jgnu",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Verify code"
+            }
+          },
+          {
+            "id": "previous_button_IAif",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_Vzd1",
+        "name": "WhatsApp verification",
+        "beforeNext": {
+          "flowId": "#FLOW-2#"
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": "Thank you! You have verified your phone number.",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {},
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Twilio - Generate OTP",
+      "description": null,
+      "actions": [
+        {
+          "id": "generateOtp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "OTP",
+          "action": "GENERATE_CODE",
+          "params": {
+            "reference": "{{input.body.phone.internationalNumber}}",
+            "length": 4
+          }
+        },
+        {
+          "id": "sendSmsWithTwilio_2Px1",
+          "allowFailure": true,
+          "alias": null,
+          "notes": null,
+          "type": "TWILIO",
+          "action": "SEND_SMS",
+          "params": {
+            "from": "REPLACE_WITH_YOUR_SENDER_NUMBER",
+            "to": "{{input.body.phone.internationalNumber}}",
+            "message": "{{generateOtp.code}} is your verification code",
+            "connectionId": "#CONN-1#",
+            "accountId": null,
+            "apiKey": null
+          }
+        },
+        {
+          "alias": "Is success?",
+          "id": "ifThenCondition_CMIr",
+          "allowFailure": false,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{sendMessage.success}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "jumpToAFormStep_epUo",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "JUMP_TO_STEP",
+                "params": {
+                  "formId": "165333208201873984",
+                  "stepId": "step_Vzd1"
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_GK3h",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "{{sendMessage.body.error.message}}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-2#": {
+      "name": "Twilio - Verify OTP",
+      "description": null,
+      "actions": [
+        {
+          "id": "verifyOtp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "OTP",
+          "action": "VERIFY_CODE",
+          "params": {
+            "reference": "{{input.body.phone.internationalNumber}}",
+            "code": "{{input.body.verification_code}}"
+          }
+        },
+        {
+          "alias": "Is it valid?",
+          "id": "ifThenCondition_xTJN",
+          "allowFailure": false,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{verifyOtp.valid}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "submitTheForm_T7Vm",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_mTWL",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "Your verification code is not valid. Please, review it and try it again."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165458932250936109",
+      "appId": "TWILIO",
+      "name": "Twilio testing"
+    }
+  }
+}
