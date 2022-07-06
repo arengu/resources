@@ -142,7 +142,9 @@
     },
     "status": null,
     "social": [],
-    "style": {},
+    "style": {
+      "version": "CLASSIC"
+    },
     "persistence": {
       "submissions": true,
       "logIP": false
@@ -167,43 +169,34 @@
           }
         },
         {
-          "alias": "Send WhatsApp message",
           "id": "sendMessage",
           "allowFailure": false,
+          "alias": null,
           "notes": null,
-          "type": "HTTP",
-          "action": "SEND_REQUEST",
+          "type": "WHATSAPP",
+          "action": "SEND_MESSAGE",
           "params": {
-            "url": "https://graph.facebook.com/v13.0/YOUR_PHONE_NUMBER_ID/messages",
-            "method": "POST",
-            "headers": {},
-            "params": {},
-            "type": "JSON",
-            "body": {
-              "messaging_product": "whatsapp",
-              "to": "{{input.body.phone.countryCodeNumber}}{{input.body.phone.nationalNumber}}",
-              "type": "template",
-              "template": {
-                "name": "otp",
-                "language": {
-                  "code": "en"
-                },
-                "components": [
-                  {
-                    "type": "body",
-                    "parameters": [
-                      {
-                        "type": "text",
-                        "text": "{{generateOtp.code}}"
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
             "connectionId": "#CONN-1#",
-            "acceptNOK": false,
-            "basic": null
+            "senderId": "PLACE_YOUR_PHONE_NUMBER_ID",
+            "recipientNumber": "{{input.body.phone.internationalNumber}}",
+            "type": "TEXT",
+            "payload": {
+              "name": "otp",
+              "language": {
+                "code": "en"
+              },
+              "components": [
+                {
+                  "type": "body",
+                  "parameters": [
+                    {
+                      "type": "text",
+                      "text": "{{generateOtp.code}}"
+                    }
+                  ]
+                }
+              ]
+            }
           }
         },
         {
@@ -352,9 +345,9 @@
   },
   "connections": {
     "#CONN-1#": {
-      "id": "165333950621720817",
-      "appId": "HTTP",
-      "name": "WhatsApp - Testing"
+      "id": "165711220467289744",
+      "appId": "WHATSAPP",
+      "name": "WhatsApp"
     }
   }
 }
