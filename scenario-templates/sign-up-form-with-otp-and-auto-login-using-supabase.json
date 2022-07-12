@@ -1,0 +1,1380 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Supabase native - Custom signup",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_bLWx",
+        "name": "Basic details",
+        "components": [
+          {
+            "id": "full_name",
+            "label": "Full name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "hint": null,
+            "category": "FIELD",
+            "type": "PASSWORD",
+            "required": true,
+            "transient": true,
+            "config": {
+              "minLength": 0,
+              "maxLength": null,
+              "config": {
+                "hash": "NONE",
+                "placeholder": null,
+                "minLength": 0,
+                "maxLength": null
+              }
+            }
+          },
+          {
+            "id": "next_button_zLRV",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Continue"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "rich_text_CF3o",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Verify your email</h2>"
+            }
+          },
+          {
+            "id": "verification_code",
+            "label": null,
+            "hint": null,
+            "category": "FIELD",
+            "type": "CUSTOM",
+            "required": true,
+            "transient": false,
+            "config": {
+              "schema": {},
+              "code": "function CustomOtpField(context) {\n  const css = `\n    .af-otp-container {\n      display: flex;\n      justify-content: center;\n    }\n    \n    .af-otp-field {\n      max-width: 50px;\n      min-height: 50px;\n      margin: 0 .5em;\n      text-align: center;\n    }  \n  `;\n\n  const style = document.createElement('style');\n  style.innerText = css;\n\n  document.head.appendChild(style);\n\n  const DEFAULT_INPUT_DIGITS = 4;\n  const FIELD_PATTERN = '[0-9]';\n  const items = [];\n\n  function addInputListener(e) {\n    const value = e.target.value;\n    const isValidField = new RegExp(FIELD_PATTERN).test(value);\n    const currentIndex = parseInt(e.target.dataset.index);\n    const isLastItem = e.target.dataset.index == items.length - 1;\n\n    if (e.inputType === 'insertFromPaste') {\n      if (!isValidField) {\n        e.target.value = null; // Do not set invalid values\n      }\n    }\n\n    if (e.inputType === 'insertText') {\n      if (!isValidField) {\n        e.target.value = null; // Do not set invalid values\n      }\n\n      if (isValidField && !isLastItem) {\n        items[currentIndex + 1].focus(); // Focus next item after valid value\n      }\n    }\n  }\n\n  function addPasteListener(e) {\n    const pastedValue = e.clipboardData.getData('text');\n    const currentIndex = parseInt(e.target.dataset.index);\n    const splittedPastedValue = pastedValue.split('');\n    const maxLoops = splittedPastedValue.length - currentIndex;\n\n    for (let i = currentIndex, v = 0; i < items.length && v <= maxLoops; i++, v++) {\n      const isValidField = new RegExp(FIELD_PATTERN).test(splittedPastedValue[v]);\n\n      if (isValidField) { // Only set valid values and focus latest item\n        items[i].value = splittedPastedValue[v];\n        items[i].focus();\n      }\n    }\n  }\n\n  function addKeyDownListener(e) {\n    const keyCode = e.keyCode || e.charCode;\n    const hasValue = !!e.target.value;\n    const index = parseInt(e.target.dataset.index);\n    const isFirstItem = index === 0;\n    const isDelete = keyCode === 8 || keyCode === 46;\n\n    if (!hasValue && isDelete && !isFirstItem) {\n      items[index - 1].focus(); // Move focus to previous item if delete key is pressed and input has no value\n    }\n  }\n\n  function buildField(index) {\n    const input = document.createElement('input');\n    input.type = 'text';\n    input.minLength = 1;\n    input.maxLength = 1;\n    input.pattern = FIELD_PATTERN;\n    input.inputMode = 'numeric';\n    input.autocomplete = 'one-time-code';\n    input.classList.add('af-otp-field');\n    input.dataset.index = index;\n    input.addEventListener('input', addInputListener);\n    input.addEventListener('paste', addPasteListener);\n    input.addEventListener('keydown', addKeyDownListener); \n\n    return input;\n  }\n\n  function initComponent() {\n    const config = context.custom.getParams();\n    const { digits } = config;\n    const arrayLength = {\n      length: digits || DEFAULT_INPUT_DIGITS,\n    };\n\n    const container = document.createElement('div');\n    container.classList.add('af-otp-container');\n\n    Array.from(arrayLength).forEach((o, index) => {\n      const input = buildField(index);\n      items.push(input);\n      container.appendChild(input);\n    });\n\n    return container;\n  }\n\n  return {\n    init() {\n      return initComponent();\n    },\n\n    getValue() {\n      const value = items.map((o) => {\n        return o.value;\n      });\n\n      return value.join('');\n    },\n  };\n}",
+              "params": {
+                "digits": "4"
+              },
+              "css": null
+            }
+          },
+          {
+            "id": "next_button_EnOd",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Verify code"
+            }
+          },
+          {
+            "id": "previous_button_wJXa",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Back"
+            }
+          }
+        ],
+        "id": "step_kKIg",
+        "name": "Verification",
+        "beforeNext": {
+          "flowId": "#FLOW-2#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "company_name",
+            "label": "Company name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "company_country",
+            "label": "Country of the company",
+            "hint": null,
+            "category": "FIELD",
+            "type": "DROPDOWN",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiple": false,
+              "options": [
+                {
+                  "label": "Afghanistan",
+                  "value": "Afghanistan"
+                },
+                {
+                  "label": "Albania",
+                  "value": "Albania"
+                },
+                {
+                  "label": "Algeria",
+                  "value": "Algeria"
+                },
+                {
+                  "label": "Andorra",
+                  "value": "Andorra"
+                },
+                {
+                  "label": "Angola",
+                  "value": "Angola"
+                },
+                {
+                  "label": "Antigua & Deps",
+                  "value": "Antigua & Deps"
+                },
+                {
+                  "label": "Argentina",
+                  "value": "Argentina"
+                },
+                {
+                  "label": "Armenia",
+                  "value": "Armenia"
+                },
+                {
+                  "label": "Australia",
+                  "value": "Australia"
+                },
+                {
+                  "label": "Austria",
+                  "value": "Austria"
+                },
+                {
+                  "label": "Azerbaijan",
+                  "value": "Azerbaijan"
+                },
+                {
+                  "label": "Bahamas",
+                  "value": "Bahamas"
+                },
+                {
+                  "label": "Bahrain",
+                  "value": "Bahrain"
+                },
+                {
+                  "label": "Bangladesh",
+                  "value": "Bangladesh"
+                },
+                {
+                  "label": "Barbados",
+                  "value": "Barbados"
+                },
+                {
+                  "label": "Belarus",
+                  "value": "Belarus"
+                },
+                {
+                  "label": "Belgium",
+                  "value": "Belgium"
+                },
+                {
+                  "label": "Belize",
+                  "value": "Belize"
+                },
+                {
+                  "label": "Benin",
+                  "value": "Benin"
+                },
+                {
+                  "label": "Bhutan",
+                  "value": "Bhutan"
+                },
+                {
+                  "label": "Bolivia",
+                  "value": "Bolivia"
+                },
+                {
+                  "label": "Bosnia Herzegovina",
+                  "value": "Bosnia Herzegovina"
+                },
+                {
+                  "label": "Botswana",
+                  "value": "Botswana"
+                },
+                {
+                  "label": "Brazil",
+                  "value": "Brazil"
+                },
+                {
+                  "label": "Brunei",
+                  "value": "Brunei"
+                },
+                {
+                  "label": "Bulgaria",
+                  "value": "Bulgaria"
+                },
+                {
+                  "label": "Burkina",
+                  "value": "Burkina"
+                },
+                {
+                  "label": "Burundi",
+                  "value": "Burundi"
+                },
+                {
+                  "label": "Cambodia",
+                  "value": "Cambodia"
+                },
+                {
+                  "label": "Cameroon",
+                  "value": "Cameroon"
+                },
+                {
+                  "label": "Canada",
+                  "value": "Canada"
+                },
+                {
+                  "label": "Cape Verde",
+                  "value": "Cape Verde"
+                },
+                {
+                  "label": "Central African Rep",
+                  "value": "Central African Rep"
+                },
+                {
+                  "label": "Chad",
+                  "value": "Chad"
+                },
+                {
+                  "label": "Chile",
+                  "value": "Chile"
+                },
+                {
+                  "label": "China",
+                  "value": "China"
+                },
+                {
+                  "label": "Colombia",
+                  "value": "Colombia"
+                },
+                {
+                  "label": "Comoros",
+                  "value": "Comoros"
+                },
+                {
+                  "label": "Congo",
+                  "value": "Congo"
+                },
+                {
+                  "label": "Congo {Democratic Rep}",
+                  "value": "Congo {Democratic Rep}"
+                },
+                {
+                  "label": "Costa Rica",
+                  "value": "Costa Rica"
+                },
+                {
+                  "label": "Croatia",
+                  "value": "Croatia"
+                },
+                {
+                  "label": "Cuba",
+                  "value": "Cuba"
+                },
+                {
+                  "label": "Cyprus",
+                  "value": "Cyprus"
+                },
+                {
+                  "label": "Czech Republic",
+                  "value": "Czech Republic"
+                },
+                {
+                  "label": "Denmark",
+                  "value": "Denmark"
+                },
+                {
+                  "label": "Djibouti",
+                  "value": "Djibouti"
+                },
+                {
+                  "label": "Dominica",
+                  "value": "Dominica"
+                },
+                {
+                  "label": "Dominican Republic",
+                  "value": "Dominican Republic"
+                },
+                {
+                  "label": "East Timor",
+                  "value": "East Timor"
+                },
+                {
+                  "label": "Ecuador",
+                  "value": "Ecuador"
+                },
+                {
+                  "label": "Egypt",
+                  "value": "Egypt"
+                },
+                {
+                  "label": "El Salvador",
+                  "value": "El Salvador"
+                },
+                {
+                  "label": "Equatorial Guinea",
+                  "value": "Equatorial Guinea"
+                },
+                {
+                  "label": "Eritrea",
+                  "value": "Eritrea"
+                },
+                {
+                  "label": "Estonia",
+                  "value": "Estonia"
+                },
+                {
+                  "label": "Ethiopia",
+                  "value": "Ethiopia"
+                },
+                {
+                  "label": "Fiji",
+                  "value": "Fiji"
+                },
+                {
+                  "label": "Finland",
+                  "value": "Finland"
+                },
+                {
+                  "label": "France",
+                  "value": "France"
+                },
+                {
+                  "label": "Gabon",
+                  "value": "Gabon"
+                },
+                {
+                  "label": "Gambia",
+                  "value": "Gambia"
+                },
+                {
+                  "label": "Georgia",
+                  "value": "Georgia"
+                },
+                {
+                  "label": "Germany",
+                  "value": "Germany"
+                },
+                {
+                  "label": "Ghana",
+                  "value": "Ghana"
+                },
+                {
+                  "label": "Greece",
+                  "value": "Greece"
+                },
+                {
+                  "label": "Grenada",
+                  "value": "Grenada"
+                },
+                {
+                  "label": "Guatemala",
+                  "value": "Guatemala"
+                },
+                {
+                  "label": "Guinea",
+                  "value": "Guinea"
+                },
+                {
+                  "label": "Guinea-Bissau",
+                  "value": "Guinea-Bissau"
+                },
+                {
+                  "label": "Guyana",
+                  "value": "Guyana"
+                },
+                {
+                  "label": "Haiti",
+                  "value": "Haiti"
+                },
+                {
+                  "label": "Honduras",
+                  "value": "Honduras"
+                },
+                {
+                  "label": "Hungary",
+                  "value": "Hungary"
+                },
+                {
+                  "label": "Iceland",
+                  "value": "Iceland"
+                },
+                {
+                  "label": "India",
+                  "value": "India"
+                },
+                {
+                  "label": "Indonesia",
+                  "value": "Indonesia"
+                },
+                {
+                  "label": "Iran",
+                  "value": "Iran"
+                },
+                {
+                  "label": "Iraq",
+                  "value": "Iraq"
+                },
+                {
+                  "label": "Ireland {Republic}",
+                  "value": "Ireland {Republic}"
+                },
+                {
+                  "label": "Israel",
+                  "value": "Israel"
+                },
+                {
+                  "label": "Italy",
+                  "value": "Italy"
+                },
+                {
+                  "label": "Ivory Coast",
+                  "value": "Ivory Coast"
+                },
+                {
+                  "label": "Jamaica",
+                  "value": "Jamaica"
+                },
+                {
+                  "label": "Japan",
+                  "value": "Japan"
+                },
+                {
+                  "label": "Jordan",
+                  "value": "Jordan"
+                },
+                {
+                  "label": "Kazakhstan",
+                  "value": "Kazakhstan"
+                },
+                {
+                  "label": "Kenya",
+                  "value": "Kenya"
+                },
+                {
+                  "label": "Kiribati",
+                  "value": "Kiribati"
+                },
+                {
+                  "label": "Korea North",
+                  "value": "Korea North"
+                },
+                {
+                  "label": "Korea South",
+                  "value": "Korea South"
+                },
+                {
+                  "label": "Kosovo",
+                  "value": "Kosovo"
+                },
+                {
+                  "label": "Kuwait",
+                  "value": "Kuwait"
+                },
+                {
+                  "label": "Kyrgyzstan",
+                  "value": "Kyrgyzstan"
+                },
+                {
+                  "label": "Laos",
+                  "value": "Laos"
+                },
+                {
+                  "label": "Latvia",
+                  "value": "Latvia"
+                },
+                {
+                  "label": "Lebanon",
+                  "value": "Lebanon"
+                },
+                {
+                  "label": "Lesotho",
+                  "value": "Lesotho"
+                },
+                {
+                  "label": "Liberia",
+                  "value": "Liberia"
+                },
+                {
+                  "label": "Libya",
+                  "value": "Libya"
+                },
+                {
+                  "label": "Liechtenstein",
+                  "value": "Liechtenstein"
+                },
+                {
+                  "label": "Lithuania",
+                  "value": "Lithuania"
+                },
+                {
+                  "label": "Luxembourg",
+                  "value": "Luxembourg"
+                },
+                {
+                  "label": "Macedonia",
+                  "value": "Macedonia"
+                },
+                {
+                  "label": "Madagascar",
+                  "value": "Madagascar"
+                },
+                {
+                  "label": "Malawi",
+                  "value": "Malawi"
+                },
+                {
+                  "label": "Malaysia",
+                  "value": "Malaysia"
+                },
+                {
+                  "label": "Maldives",
+                  "value": "Maldives"
+                },
+                {
+                  "label": "Mali",
+                  "value": "Mali"
+                },
+                {
+                  "label": "Malta",
+                  "value": "Malta"
+                },
+                {
+                  "label": "Marshall Islands",
+                  "value": "Marshall Islands"
+                },
+                {
+                  "label": "Mauritania",
+                  "value": "Mauritania"
+                },
+                {
+                  "label": "Mauritius",
+                  "value": "Mauritius"
+                },
+                {
+                  "label": "Mexico",
+                  "value": "Mexico"
+                },
+                {
+                  "label": "Micronesia",
+                  "value": "Micronesia"
+                },
+                {
+                  "label": "Moldova",
+                  "value": "Moldova"
+                },
+                {
+                  "label": "Monaco",
+                  "value": "Monaco"
+                },
+                {
+                  "label": "Mongolia",
+                  "value": "Mongolia"
+                },
+                {
+                  "label": "Montenegro",
+                  "value": "Montenegro"
+                },
+                {
+                  "label": "Morocco",
+                  "value": "Morocco"
+                },
+                {
+                  "label": "Mozambique",
+                  "value": "Mozambique"
+                },
+                {
+                  "label": "Myanmar, {Burma}",
+                  "value": "Myanmar, {Burma}"
+                },
+                {
+                  "label": "Namibia",
+                  "value": "Namibia"
+                },
+                {
+                  "label": "Nauru",
+                  "value": "Nauru"
+                },
+                {
+                  "label": "Nepal",
+                  "value": "Nepal"
+                },
+                {
+                  "label": "Netherlands",
+                  "value": "Netherlands"
+                },
+                {
+                  "label": "New Zealand",
+                  "value": "New Zealand"
+                },
+                {
+                  "label": "Nicaragua",
+                  "value": "Nicaragua"
+                },
+                {
+                  "label": "Niger",
+                  "value": "Niger"
+                },
+                {
+                  "label": "Nigeria",
+                  "value": "Nigeria"
+                },
+                {
+                  "label": "Norway",
+                  "value": "Norway"
+                },
+                {
+                  "label": "Oman",
+                  "value": "Oman"
+                },
+                {
+                  "label": "Pakistan",
+                  "value": "Pakistan"
+                },
+                {
+                  "label": "Palau",
+                  "value": "Palau"
+                },
+                {
+                  "label": "Panama",
+                  "value": "Panama"
+                },
+                {
+                  "label": "Papua New Guinea",
+                  "value": "Papua New Guinea"
+                },
+                {
+                  "label": "Paraguay",
+                  "value": "Paraguay"
+                },
+                {
+                  "label": "Peru",
+                  "value": "Peru"
+                },
+                {
+                  "label": "Philippines",
+                  "value": "Philippines"
+                },
+                {
+                  "label": "Poland",
+                  "value": "Poland"
+                },
+                {
+                  "label": "Portugal",
+                  "value": "Portugal"
+                },
+                {
+                  "label": "Qatar",
+                  "value": "Qatar"
+                },
+                {
+                  "label": "Romania",
+                  "value": "Romania"
+                },
+                {
+                  "label": "Russian Federation",
+                  "value": "Russian Federation"
+                },
+                {
+                  "label": "Rwanda",
+                  "value": "Rwanda"
+                },
+                {
+                  "label": "St Kitts & Nevis",
+                  "value": "St Kitts & Nevis"
+                },
+                {
+                  "label": "St Lucia",
+                  "value": "St Lucia"
+                },
+                {
+                  "label": "Saint Vincent & the Grenadines",
+                  "value": "Saint Vincent & the Grenadines"
+                },
+                {
+                  "label": "Samoa",
+                  "value": "Samoa"
+                },
+                {
+                  "label": "San Marino",
+                  "value": "San Marino"
+                },
+                {
+                  "label": "Sao Tome & Principe",
+                  "value": "Sao Tome & Principe"
+                },
+                {
+                  "label": "Saudi Arabia",
+                  "value": "Saudi Arabia"
+                },
+                {
+                  "label": "Senegal",
+                  "value": "Senegal"
+                },
+                {
+                  "label": "Serbia",
+                  "value": "Serbia"
+                },
+                {
+                  "label": "Seychelles",
+                  "value": "Seychelles"
+                },
+                {
+                  "label": "Sierra Leone",
+                  "value": "Sierra Leone"
+                },
+                {
+                  "label": "Singapore",
+                  "value": "Singapore"
+                },
+                {
+                  "label": "Slovakia",
+                  "value": "Slovakia"
+                },
+                {
+                  "label": "Slovenia",
+                  "value": "Slovenia"
+                },
+                {
+                  "label": "Solomon Islands",
+                  "value": "Solomon Islands"
+                },
+                {
+                  "label": "Somalia",
+                  "value": "Somalia"
+                },
+                {
+                  "label": "South Africa",
+                  "value": "South Africa"
+                },
+                {
+                  "label": "South Sudan",
+                  "value": "South Sudan"
+                },
+                {
+                  "label": "Spain",
+                  "value": "Spain"
+                },
+                {
+                  "label": "Sri Lanka",
+                  "value": "Sri Lanka"
+                },
+                {
+                  "label": "Sudan",
+                  "value": "Sudan"
+                },
+                {
+                  "label": "Suriname",
+                  "value": "Suriname"
+                },
+                {
+                  "label": "Swaziland",
+                  "value": "Swaziland"
+                },
+                {
+                  "label": "Sweden",
+                  "value": "Sweden"
+                },
+                {
+                  "label": "Switzerland",
+                  "value": "Switzerland"
+                },
+                {
+                  "label": "Syria",
+                  "value": "Syria"
+                },
+                {
+                  "label": "Taiwan",
+                  "value": "Taiwan"
+                },
+                {
+                  "label": "Tajikistan",
+                  "value": "Tajikistan"
+                },
+                {
+                  "label": "Tanzania",
+                  "value": "Tanzania"
+                },
+                {
+                  "label": "Thailand",
+                  "value": "Thailand"
+                },
+                {
+                  "label": "Togo",
+                  "value": "Togo"
+                },
+                {
+                  "label": "Tonga",
+                  "value": "Tonga"
+                },
+                {
+                  "label": "Trinidad & Tobago",
+                  "value": "Trinidad & Tobago"
+                },
+                {
+                  "label": "Tunisia",
+                  "value": "Tunisia"
+                },
+                {
+                  "label": "Turkey",
+                  "value": "Turkey"
+                },
+                {
+                  "label": "Turkmenistan",
+                  "value": "Turkmenistan"
+                },
+                {
+                  "label": "Tuvalu",
+                  "value": "Tuvalu"
+                },
+                {
+                  "label": "Uganda",
+                  "value": "Uganda"
+                },
+                {
+                  "label": "Ukraine",
+                  "value": "Ukraine"
+                },
+                {
+                  "label": "United Arab Emirates",
+                  "value": "United Arab Emirates"
+                },
+                {
+                  "label": "United Kingdom",
+                  "value": "United Kingdom"
+                },
+                {
+                  "label": "United States",
+                  "value": "United States"
+                },
+                {
+                  "label": "Uruguay",
+                  "value": "Uruguay"
+                },
+                {
+                  "label": "Uzbekistan",
+                  "value": "Uzbekistan"
+                },
+                {
+                  "label": "Vanuatu",
+                  "value": "Vanuatu"
+                },
+                {
+                  "label": "Vatican City",
+                  "value": "Vatican City"
+                },
+                {
+                  "label": "Venezuela",
+                  "value": "Venezuela"
+                },
+                {
+                  "label": "Vietnam",
+                  "value": "Vietnam"
+                },
+                {
+                  "label": "Yemen",
+                  "value": "Yemen"
+                },
+                {
+                  "label": "Zambia",
+                  "value": "Zambia"
+                },
+                {
+                  "label": "Zimbabwe",
+                  "value": "Zimbabwe"
+                }
+              ],
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "company_industry",
+            "label": "Industry",
+            "hint": null,
+            "category": "FIELD",
+            "type": "DROPDOWN",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiple": false,
+              "options": [
+                {
+                  "label": "Aerospace",
+                  "value": "Aerospace"
+                },
+                {
+                  "label": "Transport",
+                  "value": "Transport"
+                },
+                {
+                  "label": "Computer",
+                  "value": "Computer"
+                },
+                {
+                  "label": "Telecommunication",
+                  "value": "Telecommunication"
+                },
+                {
+                  "label": "Agriculture",
+                  "value": "Agriculture"
+                },
+                {
+                  "label": "Construction",
+                  "value": "Construction"
+                },
+                {
+                  "label": "Education",
+                  "value": "Education"
+                },
+                {
+                  "label": "Pharmaceutical",
+                  "value": "Pharmaceutical"
+                },
+                {
+                  "label": "Food",
+                  "value": "Food"
+                },
+                {
+                  "label": "Health care",
+                  "value": "Health care"
+                },
+                {
+                  "label": "Hospitality",
+                  "value": "Hospitality"
+                },
+                {
+                  "label": "Entertainment",
+                  "value": "Entertainment"
+                },
+                {
+                  "label": "News Media",
+                  "value": "News Media"
+                },
+                {
+                  "label": "Energy",
+                  "value": "Energy"
+                },
+                {
+                  "label": "Manufacturing",
+                  "value": "Manufacturing"
+                }
+              ],
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "role",
+            "label": "Your role",
+            "hint": null,
+            "category": "FIELD",
+            "type": "CHOICE",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiple": false,
+              "options": [
+                {
+                  "label": "Engineering",
+                  "value": "Engineering"
+                },
+                {
+                  "label": "Marketing",
+                  "value": "Marketing"
+                },
+                {
+                  "label": "Sales",
+                  "value": "Sales"
+                },
+                {
+                  "label": "Finance",
+                  "value": "Finance"
+                },
+                {
+                  "label": "Other",
+                  "value": "Other"
+                }
+              ],
+              "defaultValue": null,
+              "allowOther": null
+            }
+          },
+          {
+            "id": "next_button_4ftk",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Complete signup"
+            }
+          },
+          {
+            "id": "previous_button_zByp",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_OR8X",
+        "name": "Profile details",
+        "beforeNext": {
+          "flowId": "#FLOW-3#"
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": null,
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 0,
+        "target": "{{state.redirectUrl}}"
+      }
+    },
+    "status": null,
+    "social": [],
+    "style": {
+      "version": "CLASSIC"
+    },
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-2#": {
+      "name": "Supabase - Verify OTP (2/2)",
+      "description": null,
+      "actions": [
+        {
+          "id": "verifyOtp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "OTP",
+          "action": "VERIFY_CODE",
+          "params": {
+            "reference": "{{input.body.email}}",
+            "code": "{{input.body.verification_code}}"
+          }
+        },
+        {
+          "id": "ifThenCondition_BYLZ",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{verifyOtp.valid}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "jumpToAFormStep_Z4Dz",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "JUMP_TO_STEP",
+                "params": {
+                  "formId": "165220565753945784",
+                  "stepId": "step_OR8X"
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_qSVt",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "Your OTP is not valid"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-1#": {
+      "name": "Supabase - Generate OTP (1/2)",
+      "description": null,
+      "actions": [
+        {
+          "id": "generateOtp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "OTP",
+          "action": "GENERATE_CODE",
+          "params": {
+            "reference": "{{input.body.email}}",
+            "length": 4
+          }
+        },
+        {
+          "id": "sendEmail_OJU5",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "EMAIL",
+          "action": "SEND_EMAIL",
+          "params": {
+            "sender": {
+              "name": null
+            },
+            "recipient": {
+              "email": "{{input.body.email}}",
+              "name": "{{input.body.full_name}}"
+            },
+            "subject": "{{generateOtp.code}} is your verification code",
+            "content": "{{input.body.full_name}}, {{generateOtp.code}} is your verification code."
+          }
+        },
+        {
+          "id": "jumpToAFormStep_l20X",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "FLOW",
+          "action": "JUMP_TO_STEP",
+          "params": {
+            "formId": "165220565753945784",
+            "stepId": "step_kKIg"
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-3#": {
+      "name": "Supabase - Signup",
+      "description": null,
+      "actions": [
+        {
+          "id": "signUp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "SUPABASE",
+          "action": "SIGNUP",
+          "params": {
+            "connectionId": "#CONN-1#",
+            "email": {
+              "value": "{{input.body.email}}",
+              "verified": false
+            },
+            "password": "{{input.body.password}}",
+            "data": {
+              "full_name": "{{input.body.full_name}}",
+              "company_name": "{{input.body.company_name}}",
+              "company_industry": "{{input.body.company_industry}}",
+              "company_country": "{{input.body.company_country}}",
+              "role": "{{input.body.role}}"
+            }
+          }
+        },
+        {
+          "id": "ifThenCondition_G06J",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{signUp.status}}",
+                    "200"
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "generateLink",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "SUPABASE",
+                "action": "GENERATE_LINK",
+                "params": {
+                  "connectionId": "#CONN-1#",
+                  "email": "{{input.body.email}}",
+                  "redirectUri": "http://www.localhost:3000/profile"
+                }
+              },
+              {
+                "id": "storeStateVariable_PIIz",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "redirectUrl": "{{generateLink.body.action_link}}"
+                  }
+                }
+              },
+              {
+                "id": "submitTheForm_anJR",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_2dMt",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "{{signUp.body.msg}}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165760517840930344",
+      "appId": "SUPABASE",
+      "name": "Supabase"
+    }
+  }
+}
