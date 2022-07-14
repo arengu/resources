@@ -197,6 +197,8 @@
         {
           "id": "signUp",
           "allowFailure": false,
+          "alias": null,
+          "notes": null,
           "type": "SUPABASE",
           "action": "SIGNUP",
           "params": {
@@ -209,13 +211,13 @@
             "data": {
               "first_name": "{{input.body.first_name}}"
             }
-          },
-          "alias": null,
-          "notes": null
+          }
         },
         {
           "id": "ifThenCondition_SagC",
           "allowFailure": false,
+          "alias": null,
+          "notes": null,
           "type": "FLOW",
           "action": "BOOLEAN_CONDITION",
           "params": {
@@ -235,25 +237,36 @@
               {
                 "id": "generateLink",
                 "allowFailure": false,
+                "alias": null,
+                "notes": null,
                 "type": "SUPABASE",
                 "action": "GENERATE_LINK",
                 "params": {
                   "connectionId": "#CONN-1#",
                   "email": "{{input.body.email}}",
                   "redirectUri": "http://www.localhost:3000/profile"
-                },
-                "alias": null,
-                "notes": null
+                }
               },
               {
                 "id": "storeStateVariable_7O9q",
                 "allowFailure": false,
+                "alias": null,
+                "notes": null,
                 "type": "FLOW",
                 "action": "STORE_STATE",
                 "params": {
                   "data": {
                     "redirectUrl": "{{generateLink.body.action_link}}"
                   }
+                }
+              },
+              {
+                "id": "submitTheForm_SnvB",
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
                 },
                 "alias": null,
                 "notes": null
@@ -263,18 +276,16 @@
               {
                 "id": "showErrorMessage_jG4I",
                 "allowFailure": false,
+                "alias": null,
+                "notes": null,
                 "type": "FLOW",
                 "action": "ERROR_MESSAGE",
                 "params": {
                   "message": "{{signUp.body.msg}}"
-                },
-                "alias": null,
-                "notes": null
+                }
               }
             ]
-          },
-          "alias": null,
-          "notes": null
+          }
         }
       ],
       "triggers": {

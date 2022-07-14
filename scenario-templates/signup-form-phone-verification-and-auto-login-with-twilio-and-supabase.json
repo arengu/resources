@@ -203,131 +203,6 @@
     "tags": []
   },
   "flows": {
-    "#FLOW-2#": {
-      "name": "Supabase - Verify OTP & Signup",
-      "description": null,
-      "actions": [
-        {
-          "id": "verifyOtp",
-          "allowFailure": false,
-          "alias": null,
-          "notes": null,
-          "type": "OTP",
-          "action": "VERIFY_CODE",
-          "params": {
-            "reference": "{{input.body.phone.internationalNumber}}",
-            "code": "{{input.body.verification_code}}"
-          }
-        },
-        {
-          "alias": "Is it valid?",
-          "id": "ifThenCondition_8hz8",
-          "allowFailure": false,
-          "notes": null,
-          "type": "FLOW",
-          "action": "BOOLEAN_CONDITION",
-          "params": {
-            "evaluate": {
-              "operator": "AND",
-              "operands": [
-                {
-                  "operator": "EQ",
-                  "operands": [
-                    "{{verifyOtp.valid}}",
-                    true
-                  ]
-                }
-              ]
-            },
-            "then": [
-              {
-                "id": "signup",
-                "allowFailure": false,
-                "alias": null,
-                "notes": null,
-                "type": "SUPABASE",
-                "action": "SIGNUP",
-                "params": {
-                  "connectionId": "#CONN-1#",
-                  "email": {
-                    "value": "{{input.body.email}}",
-                    "verified": true
-                  },
-                  "password": "{{input.body.password}}",
-                  "data": {
-                    "full_name": "{{input.body.full_name}}",
-                    "phone": "{{input.body.phone.internationalNumber}}"
-                  }
-                }
-              },
-              {
-                "id": "generateLink",
-                "allowFailure": false,
-                "alias": null,
-                "notes": null,
-                "type": "SUPABASE",
-                "action": "GENERATE_LINK",
-                "params": {
-                  "connectionId": "#CONN-1#",
-                  "email": "{{input.body.email}}",
-                  "redirectUri": null
-                }
-              },
-              {
-                "alias": "Store action_link",
-                "id": "storeStateVariable_kOg0",
-                "allowFailure": false,
-                "notes": null,
-                "type": "FLOW",
-                "action": "STORE_STATE",
-                "params": {
-                  "data": {
-                    "action_link": "{{generateLink.body.action_link}}"
-                  }
-                }
-              },
-              {
-                "id": "submitTheForm_JBWA",
-                "allowFailure": false,
-                "alias": null,
-                "notes": null,
-                "type": "FLOW",
-                "action": "SUBMIT_FORM",
-                "params": {
-                  "endingScreen": true
-                }
-              }
-            ],
-            "otherwise": [
-              {
-                "id": "showErrorMessage_osNI",
-                "allowFailure": false,
-                "alias": null,
-                "notes": null,
-                "type": "FLOW",
-                "action": "ERROR_MESSAGE",
-                "params": {
-                  "message": "This verification code is not valid. Please, review it and try it again."
-                }
-              }
-            ]
-          }
-        }
-      ],
-      "triggers": {
-        "webhook": {
-          "enabled": false,
-          "secret": null
-        },
-        "submission": {
-          "formIds": []
-        }
-      },
-      "synchronous": true,
-      "security": {
-        "rateLimits": []
-      }
-    },
     "#FLOW-1#": {
       "name": "Supabase - Generate OTP",
       "description": null,
@@ -355,7 +230,7 @@
             "from": "REPLACE_WITH_YOUR_SENDER_NUMBER",
             "to": "{{input.body.phone.internationalNumber}}",
             "message": "{{generateOtp.code}} is your verification code",
-            "connectionId": "#CONN-2#",
+            "connectionId": "#CONN-1#",
             "accountId": null,
             "apiKey": null
           }
@@ -423,18 +298,143 @@
       "security": {
         "rateLimits": []
       }
+    },
+    "#FLOW-2#": {
+      "name": "Supabase - Verify OTP & Signup",
+      "description": null,
+      "actions": [
+        {
+          "id": "verifyOtp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "OTP",
+          "action": "VERIFY_CODE",
+          "params": {
+            "reference": "{{input.body.phone.internationalNumber}}",
+            "code": "{{input.body.verification_code}}"
+          }
+        },
+        {
+          "alias": "Is it valid?",
+          "id": "ifThenCondition_8hz8",
+          "allowFailure": false,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{verifyOtp.valid}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "signup",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "SUPABASE",
+                "action": "SIGNUP",
+                "params": {
+                  "connectionId": "#CONN-2#",
+                  "email": {
+                    "value": "{{input.body.email}}",
+                    "verified": false
+                  },
+                  "password": "{{input.body.password}}",
+                  "data": {
+                    "full_name": "{{input.body.full_name}}",
+                    "phone": "{{input.body.phone.internationalNumber}}"
+                  }
+                }
+              },
+              {
+                "id": "generateLink",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "SUPABASE",
+                "action": "GENERATE_LINK",
+                "params": {
+                  "connectionId": "#CONN-2#",
+                  "email": "{{input.body.email}}",
+                  "redirectUri": null
+                }
+              },
+              {
+                "alias": "Store action_link",
+                "id": "storeStateVariable_kOg0",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "action_link": "{{generateLink.body.action_link}}"
+                  }
+                }
+              },
+              {
+                "id": "submitTheForm_JBWA",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_osNI",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "This verification code is not valid. Please, review it and try it again."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
     }
   },
   "connections": {
     "#CONN-1#": {
-      "id": "165760517840930344",
-      "appId": "SUPABASE",
-      "name": "Supabase"
-    },
-    "#CONN-2#": {
       "id": "165761518306264589",
       "appId": "TWILIO",
       "name": "Twilio testing"
+    },
+    "#CONN-2#": {
+      "id": "165760517840930344",
+      "appId": "SUPABASE",
+      "name": "Supabase"
     }
   }
 }
