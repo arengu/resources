@@ -1,0 +1,313 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Sign up form with paywall with Supabase and Stripe",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "components": [
+          {
+            "id": "html_zfE9",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span></span>\n</div>\n<style>\n  .stepper span {\n    background: #E7E9ED;\n    height: 3px;\n    width: 100%;\n    display: flex;\n    margin-right: 4px;\n  }\n\n  .stepper {\n    display: inline-flex;\n    width: 100%;\n  }\n\n  .stepper span:last-child {\n    margin-right: 0;\n  }\n\n  .stepper span.filled {\n    background: var(--primary-color);\n  }\n</style>"
+            }
+          },
+          {
+            "id": "rich_text_Cbi5",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Enter account details</h2><p>Enter your account details and a strong password to secure your account.</p>"
+            }
+          },
+          {
+            "id": "text_dDtN",
+            "label": "First name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_SO9m",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          },
+          {
+            "id": "previous_button_90cI",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_Ona1",
+        "name": "New step",
+        "beforeNext": {
+          "flowId": null
+        }
+      },
+      {
+        "id": "step_O5HB",
+        "name": "Payment details",
+        "components": [
+          {
+            "id": "html_95fd",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span class=\"filled\"></span>\n</div>"
+            }
+          },
+          {
+            "id": "rich_text_q2zL",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Payment details</h2><p>Please enter your credit card to access the content. The payment is managed securely by Stripe.</p>"
+            }
+          },
+          {
+            "id": "payment",
+            "label": null,
+            "hint": null,
+            "category": "FIELD",
+            "type": "PAYMENT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "provider": "STRIPE",
+              "charge": {
+                "type": "ONE_OFF",
+                "oneOff": {
+                  "amount": 10,
+                  "currency": "EUR"
+                }
+              },
+              "credentials": {
+                "publicKey": "PLACE_YOUR_PUBLISHABLE_KEY",
+                "privateKey": "PLACE_YOUR_SECRET_KEY"
+              },
+              "customer": {
+                "email": "{{fields.email}}",
+                "description": null,
+                "metadata": null,
+                "shipping": null
+              },
+              "fields": {
+                "cardNumber": {
+                  "label": "Credit or debit card",
+                  "placeholder": "1234 1234 1234 1234"
+                },
+                "expirationDate": {
+                  "label": "Expiration date",
+                  "placeholder": "MM / YY"
+                },
+                "securityCode": {
+                  "label": "Security code",
+                  "placeholder": "CVC"
+                },
+                "trustmarks": true
+              }
+            }
+          },
+          {
+            "id": "next_button_epEE",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Confirm payment"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": null,
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 0,
+        "target": "{{state.redirectUrl}}"
+      }
+    },
+    "status": null,
+    "social": [],
+    "style": {
+      "version": "CLASSIC"
+    },
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Paywall confirm + Supabase",
+      "description": null,
+      "actions": [
+        {
+          "id": "signUp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "SUPABASE",
+          "action": "SIGNUP",
+          "params": {
+            "connectionId": "#CONN-1#",
+            "email": {
+              "value": "{{input.body.email}}",
+              "verified": false
+            },
+            "password": "{{input.body.password}}",
+            "data": {
+              "first_name": "{{input.body.first_name}}"
+            }
+          }
+        },
+        {
+          "id": "ifThenCondition_SagC",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{signUp.status}}",
+                    "200"
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "generateLink",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "SUPABASE",
+                "action": "GENERATE_LINK",
+                "params": {
+                  "connectionId": "#CONN-1#",
+                  "email": "{{input.body.email}}",
+                  "redirectUri": "http://www.localhost:3000/profile"
+                }
+              },
+              {
+                "id": "storeStateVariable_7O9q",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "redirectUrl": "{{generateLink.body.action_link}}"
+                  }
+                }
+              },
+              {
+                "id": "submitTheForm_SnvB",
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                },
+                "alias": null,
+                "notes": null
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_jG4I",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "{{signUp.body.msg}}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165760517840930344",
+      "appId": "SUPABASE",
+      "name": "Supabase"
+    }
+  }
+}

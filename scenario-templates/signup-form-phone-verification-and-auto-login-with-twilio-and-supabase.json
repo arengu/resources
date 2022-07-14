@@ -1,0 +1,440 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Supabase - Signup with phone verification",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_S1zJ",
+        "name": "Account details",
+        "components": [
+          {
+            "id": "html_dvf5",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span></span>\n</div>\n<style>\n  .stepper span {\n    background: #E7E9ED;\n    height: 3px;\n    width: 100%;\n    display: flex;\n    margin-right: 4px;\n  }\n\n  .stepper {\n    display: inline-flex;\n    width: 100%;\n  }\n\n  .stepper span:last-child {\n    margin-right: 0;\n  }\n\n  .stepper span.filled {\n    background: var(--primary-color);\n  }\n</style>"
+            }
+          },
+          {
+            "id": "rich_text_Vm45",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Enter account details</h2><p>Enter your account details and a strong password to secure your account.</p>"
+            }
+          },
+          {
+            "id": "full_name",
+            "label": "Full name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "hint": null,
+            "category": "FIELD",
+            "type": "PASSWORD",
+            "required": true,
+            "transient": true,
+            "config": {
+              "minLength": 0,
+              "maxLength": null,
+              "config": {
+                "hash": "NONE",
+                "placeholder": null,
+                "minLength": 0,
+                "maxLength": null
+              }
+            }
+          },
+          {
+            "id": "phone",
+            "label": "Phone",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "countryPicker": true,
+              "translations": {
+                "filterPlaceholder": null
+              },
+              "placeholder": null,
+              "defaultCC": null,
+              "allowedCountries": [],
+              "forbiddenCountries": [],
+              "minLength": 0,
+              "maxLength": null
+            }
+          },
+          {
+            "id": "next_button_cWcX",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Continue"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "html_7ueu",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span class=\"filled\"></span>\n</div>"
+            }
+          },
+          {
+            "id": "rich_text_A1Ni",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Phone verification</h2><p>Please enter the 4-digit verification code that was sent to <strong>{{fields.phone.internationalNumber}}</strong>. The code is valid for 30 minutes.</p>"
+            }
+          },
+          {
+            "id": "verification_code",
+            "label": "Verification code",
+            "hint": null,
+            "category": "FIELD",
+            "type": "NUMBER",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "minValue": null,
+              "maxValue": null,
+              "format": "DECIMAL",
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_aidt",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Continue"
+            }
+          },
+          {
+            "id": "previous_button_Tq1O",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_MzcC",
+        "name": "Phone verification",
+        "beforeNext": {
+          "flowId": "#FLOW-2#"
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "email": null,
+      "flowId": null
+    },
+    "ending": {
+      "content": null,
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 0,
+        "target": "{{state.action_link}}"
+      }
+    },
+    "status": null,
+    "social": [],
+    "style": {
+      "version": "CLASSIC"
+    },
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Supabase - Generate OTP",
+      "description": null,
+      "actions": [
+        {
+          "id": "generateOtp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "OTP",
+          "action": "GENERATE_CODE",
+          "params": {
+            "reference": "{{input.body.email}}",
+            "length": 4
+          }
+        },
+        {
+          "id": "sendSmsWithTwilio_DG9I",
+          "allowFailure": true,
+          "alias": null,
+          "notes": null,
+          "type": "TWILIO",
+          "action": "SEND_SMS",
+          "params": {
+            "from": "REPLACE_WITH_YOUR_SENDER_NUMBER",
+            "to": "{{input.body.phone.internationalNumber}}",
+            "message": "{{generateOtp.code}} is your verification code",
+            "connectionId": "#CONN-1#",
+            "accountId": null,
+            "apiKey": null
+          }
+        },
+        {
+          "alias": "Is success?",
+          "id": "ifThenCondition_R6K7",
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{sendMessage.success}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "jumpToAFormStep_Zwdv",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "JUMP_TO_STEP",
+                "params": {
+                  "formId": "165762417454517906",
+                  "stepId": "step_MzcC"
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_aVuC",
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "{{sendMessage.body.error.message}}"
+                },
+                "alias": null,
+                "notes": null
+              }
+            ]
+          },
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-2#": {
+      "name": "Supabase - Verify OTP & Signup",
+      "description": null,
+      "actions": [
+        {
+          "id": "verifyOtp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "OTP",
+          "action": "VERIFY_CODE",
+          "params": {
+            "reference": "{{input.body.phone.internationalNumber}}",
+            "code": "{{input.body.verification_code}}"
+          }
+        },
+        {
+          "alias": "Is it valid?",
+          "id": "ifThenCondition_8hz8",
+          "allowFailure": false,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{verifyOtp.valid}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "signup",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "SUPABASE",
+                "action": "SIGNUP",
+                "params": {
+                  "connectionId": "#CONN-2#",
+                  "email": {
+                    "value": "{{input.body.email}}",
+                    "verified": false
+                  },
+                  "password": "{{input.body.password}}",
+                  "data": {
+                    "full_name": "{{input.body.full_name}}",
+                    "phone": "{{input.body.phone.internationalNumber}}"
+                  }
+                }
+              },
+              {
+                "id": "generateLink",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "SUPABASE",
+                "action": "GENERATE_LINK",
+                "params": {
+                  "connectionId": "#CONN-2#",
+                  "email": "{{input.body.email}}",
+                  "redirectUri": null
+                }
+              },
+              {
+                "alias": "Store action_link",
+                "id": "storeStateVariable_kOg0",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "action_link": "{{generateLink.body.action_link}}"
+                  }
+                }
+              },
+              {
+                "id": "submitTheForm_JBWA",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_osNI",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "This verification code is not valid. Please, review it and try it again."
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165761518306264589",
+      "appId": "TWILIO",
+      "name": "Twilio testing"
+    },
+    "#CONN-2#": {
+      "id": "165760517840930344",
+      "appId": "SUPABASE",
+      "name": "Supabase"
+    }
+  }
+}

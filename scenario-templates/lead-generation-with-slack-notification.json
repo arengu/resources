@@ -1,0 +1,235 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Lead generation with Slack notification",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_p3jT",
+        "name": "Name & Email",
+        "components": [
+          {
+            "id": "rich_text_tW14",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h3>Let's talk! </h3><p>An expert will reach out to discuss your needs.</p>"
+            }
+          },
+          {
+            "id": "name",
+            "label": "Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_mOi4",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Next"
+            }
+          }
+        ],
+        "beforeNext": {
+          "flowId": null
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "rich_text_35G0",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h3>About your company</h3><p>Complete your profile for a personalized experience.</p>"
+            }
+          },
+          {
+            "id": "company",
+            "label": "Company name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "title",
+            "label": "Job title",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_4QKu",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Next"
+            }
+          },
+          {
+            "id": "previous_button_4vPQ",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_pqrn",
+        "name": "Company info",
+        "beforeNext": {
+          "flowId": null
+        }
+      }
+    ],
+    "languages": null,
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "flowId": "#FLOW-1#",
+      "email": null
+    },
+    "ending": {
+      "content": "Thank you! Your form has been submitted successfully.",
+      "session": null,
+      "callback": null,
+      "redirection": null
+    },
+    "status": null,
+    "social": [],
+    "style": {
+      "primaryColor": "#0c8dcd",
+      "version": "CLASSIC"
+    },
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-1#": {
+      "name": "Slack - Send lead",
+      "description": null,
+      "actions": [
+        {
+          "id": "sendASlackMessage_HkFD",
+          "allowFailure": false,
+          "type": "SLACK",
+          "action": "POST_MESSAGE",
+          "params": {
+            "text": "New submission",
+            "attachments": [
+              {
+                "fields": [
+                  {
+                    "title": "name",
+                    "value": "{{input.body.name}}",
+                    "short": true
+                  },
+                  {
+                    "title": "email",
+                    "value": "{{input.body.email}}",
+                    "short": true
+                  },
+                  {
+                    "title": "company",
+                    "value": "{{input.body.company}}",
+                    "short": true
+                  },
+                  {
+                    "title": "title",
+                    "value": "{{input.body.title}}",
+                    "short": true
+                  }
+                ],
+                "color": null,
+                "pretext": null,
+                "text": null,
+                "author": null,
+                "title": null,
+                "actions": []
+              }
+            ],
+            "connectionId": "#CONN-1#",
+            "url": null
+          },
+          "alias": null,
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": false,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165763649226549354",
+      "appId": "SLACK",
+      "name": "Slack #1"
+    }
+  }
+}
