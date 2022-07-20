@@ -1,0 +1,299 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Signup with Activecampaign",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_UbD4",
+        "name": "Basic details",
+        "components": [
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "hint": null,
+            "category": "FIELD",
+            "type": "PASSWORD",
+            "required": true,
+            "transient": true,
+            "config": {
+              "hash": "NONE",
+              "config": {
+                "hash": "NONE",
+                "placeholder": null,
+                "minLength": 0,
+                "maxLength": null
+              }
+            }
+          },
+          {
+            "id": "firstname",
+            "label": "First Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_okKs",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Sign up"
+            }
+          },
+          {
+            "id": "divider_tsah",
+            "category": "BLOCK",
+            "type": "DIVIDER",
+            "config": {
+              "text": "Or"
+            }
+          },
+          {
+            "id": "social",
+            "label": null,
+            "hint": null,
+            "category": "FIELD",
+            "type": "SOCIAL",
+            "transient": false,
+            "config": {},
+            "required": false
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "flowId": "#FLOW-2#",
+      "email": null
+    },
+    "ending": {
+      "content": null,
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 0,
+        "target": "{{state.redirectionUrl}}"
+      }
+    },
+    "status": null,
+    "social": [
+      {
+        "text": "Sign up with Google",
+        "scopes": [
+          "email"
+        ],
+        "clientId": "209631508019-qadn9kom0gnai47amk38m74gcsdivino.apps.googleusercontent.com",
+        "provider": "GOOGLE",
+        "disableValidation": false
+      },
+      {
+        "text": "Sign up with Facebook",
+        "scopes": [
+          "email"
+        ],
+        "clientId": "570898253689206",
+        "provider": "FACEBOOK",
+        "disableValidation": false
+      }
+    ],
+    "style": {
+      "version": "CLASSIC"
+    },
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-2#": {
+      "name": "Activecampaign - Create user",
+      "description": null,
+      "actions": [
+        {
+          "id": "createOrUpdateContact_pT2f",
+          "allowFailure": false,
+          "type": "ACTIVECAMPAIGN",
+          "action": "UPSERT_CONTACT",
+          "params": {
+            "email": "{{input.body.email}}",
+            "firstName": "{{input.body.firstname}}",
+            "customFields": {},
+            "connectionId": "#CONN-1#",
+            "baseUrl": null,
+            "apiKey": null,
+            "lastName": null,
+            "phone": null
+          },
+          "alias": null,
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": false,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-1#": {
+      "name": "Signup flow",
+      "description": null,
+      "actions": [
+        {
+          "id": "signup",
+          "alias": "Signup with custom API",
+          "allowFailure": false,
+          "notes": null,
+          "type": "HTTP",
+          "action": "SEND_REQUEST",
+          "params": {
+            "url": "https://custom.demos.arengu.com//signup",
+            "method": "POST",
+            "headers": {
+              "Authorization": "Bearer JnUjNjUmZWZLTW93NjFkOG8zeFRlI3NYbWphem5GZSZIMXlFSmVZeVlMRk03XjhCTGRBQUBAOEtvJDlGdnRNRg"
+            },
+            "params": {},
+            "type": "JSON",
+            "body": {
+              "sub": "{{input.body.email ?? input.body.social.profile.email}}",
+              "password": "{{input.body.password ?? undefined}}",
+              "meta": {
+                "firstname": "{{input.body.firstname}}"
+              }
+            },
+            "connectionId": null,
+            "acceptNOK": false,
+            "basic": null
+          }
+        },
+        {
+          "id": "checkSignup",
+          "alias": "Is it success?",
+          "allowFailure": false,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{signup.success}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "storeState_ueyc",
+                "alias": "Store data for ending screen",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "STORE_STATE",
+                "params": {
+                  "data": {
+                    "redirectionUrl": "{{signup.body.claim_url}}"
+                  }
+                }
+              },
+              {
+                "id": "submitForm_bY7l",
+                "alias": "Go to ending screen",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "SUBMIT_FORM",
+                "params": {
+                  "endingScreen": true
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "returnError_sZYD",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "{{signup.body.error_message}}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165825048283965793",
+      "appId": "ACTIVECAMPAIGN",
+      "name": "ActiveCampaign #2"
+    }
+  }
+}

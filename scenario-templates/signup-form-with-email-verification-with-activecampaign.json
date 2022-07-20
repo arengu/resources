@@ -1,0 +1,476 @@
+{
+  "version": "1.0.0",
+  "form": {
+    "name": "Signup with email verification with Activecampaign",
+    "description": null,
+    "messages": {
+      "errors": {},
+      "custom": {}
+    },
+    "hiddenFields": [],
+    "steps": [
+      {
+        "id": "step_UbD4",
+        "name": "Basic details",
+        "components": [
+          {
+            "id": "html_Khtd",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span></span>\n  <span></span>\n</div>\n<style>\n  .stepper span {\n    background: #E7E9ED;\n    height: 3px;\n    width: 100%;\n    display: flex;\n    margin-right: 4px;\n  }\n\n  .stepper {\n    display: inline-flex;\n    width: 100%;\n  }\n\n  .stepper span:last-child {\n    margin-right: 0;\n  }\n\n  .stepper span.filled {\n    background: var(--primary-color);\n  }\n</style>"
+            }
+          },
+          {
+            "id": "email",
+            "label": "Email",
+            "hint": null,
+            "category": "FIELD",
+            "type": "EMAIL",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "password",
+            "label": "Password",
+            "hint": null,
+            "category": "FIELD",
+            "type": "PASSWORD",
+            "required": true,
+            "transient": true,
+            "config": {
+              "hash": "NONE",
+              "config": {
+                "hash": "NONE",
+                "placeholder": null,
+                "minLength": 0,
+                "maxLength": null
+              }
+            }
+          },
+          {
+            "id": "firstname",
+            "label": "First Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_okKs",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Sign up"
+            }
+          },
+          {
+            "id": "divider_tsah",
+            "category": "BLOCK",
+            "type": "DIVIDER",
+            "config": {
+              "text": "Or"
+            }
+          },
+          {
+            "id": "social",
+            "label": null,
+            "hint": null,
+            "category": "FIELD",
+            "type": "SOCIAL",
+            "transient": false,
+            "config": {},
+            "required": false
+          }
+        ],
+        "beforeNext": {
+          "flowId": "#FLOW-1#"
+        }
+      },
+      {
+        "components": [
+          {
+            "id": "html_HmM1",
+            "category": "BLOCK",
+            "type": "HTML",
+            "config": {
+              "content": "<div class=\"stepper\">\n  <span class=\"filled\"></span>\n  <span class=\"filled\"></span>\n  <span></span>\n</div>"
+            }
+          },
+          {
+            "id": "rich_text_yThO",
+            "category": "BLOCK",
+            "type": "RICH_TEXT",
+            "config": {
+              "content": "<h2>Email verification</h2><p>Please enter the 4-digit verification code that was sent to <strong>{{fields.email}}</strong>. The code is valid for 30 minutes.</p>"
+            }
+          },
+          {
+            "id": "verification_code",
+            "label": "Number",
+            "hint": null,
+            "category": "FIELD",
+            "type": "NUMBER",
+            "required": true,
+            "transient": false,
+            "config": {
+              "defaultValue": null,
+              "minValue": null,
+              "maxValue": null,
+              "format": "DECIMAL",
+              "placeholder": null
+            }
+          },
+          {
+            "id": "next_button_RyK9",
+            "category": "BLOCK",
+            "type": "NEXT_BUTTON",
+            "config": {
+              "text": "Submit"
+            }
+          },
+          {
+            "id": "previous_button_T6Qk",
+            "category": "BLOCK",
+            "type": "PREVIOUS_BUTTON",
+            "config": {
+              "text": "Previous"
+            }
+          }
+        ],
+        "id": "step_1XYA",
+        "name": "Email verification",
+        "beforeNext": {
+          "flowId": "#FLOW-2#"
+        }
+      }
+    ],
+    "languages": {
+      "default": null,
+      "primary": "en"
+    },
+    "translations": {},
+    "beforeSubmit": {
+      "flowId": null
+    },
+    "afterSubmit": {
+      "flowId": "#FLOW-3#",
+      "email": null
+    },
+    "ending": {
+      "content": null,
+      "session": null,
+      "callback": null,
+      "redirection": {
+        "delay": 0,
+        "target": "{{state.redirectionUrl}}"
+      }
+    },
+    "status": null,
+    "social": [
+      {
+        "text": "Sign up with Google",
+        "scopes": [
+          "email"
+        ],
+        "clientId": "209631508019-qadn9kom0gnai47amk38m74gcsdivino.apps.googleusercontent.com",
+        "provider": "GOOGLE",
+        "disableValidation": false
+      },
+      {
+        "text": "Sign up with Facebook",
+        "scopes": [
+          "email"
+        ],
+        "clientId": "570898253689206",
+        "provider": "FACEBOOK",
+        "disableValidation": false
+      }
+    ],
+    "style": {
+      "version": "CLASSIC"
+    },
+    "persistence": {
+      "submissions": true,
+      "logIP": false
+    },
+    "tags": []
+  },
+  "flows": {
+    "#FLOW-2#": {
+      "name": "Verify OTP & Signup",
+      "description": null,
+      "actions": [
+        {
+          "id": "verifyOtp",
+          "allowFailure": false,
+          "type": "OTP",
+          "action": "VERIFY_CODE",
+          "params": {
+            "reference": "{{input.body.email}}",
+            "code": "{{input.body.verification_code}}"
+          },
+          "alias": null,
+          "notes": null
+        },
+        {
+          "alias": "Is it valid?",
+          "id": "ifThenCondition_znW2",
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "EQ",
+                  "operands": [
+                    "{{verifyOtp.valid}}",
+                    true
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "signup",
+                "alias": "Signup with custom API",
+                "allowFailure": false,
+                "notes": null,
+                "type": "HTTP",
+                "action": "SEND_REQUEST",
+                "params": {
+                  "url": "https://custom.demos.arengu.com//signup",
+                  "method": "POST",
+                  "headers": {
+                    "Authorization": "Bearer JnUjNjUmZWZLTW93NjFkOG8zeFRlI3NYbWphem5GZSZIMXlFSmVZeVlMRk03XjhCTGRBQUBAOEtvJDlGdnRNRg"
+                  },
+                  "params": {},
+                  "type": "JSON",
+                  "body": {
+                    "sub": "{{input.body.email ?? input.body.social.profile.email}}",
+                    "password": "{{input.body.password ?? undefined}}",
+                    "meta": {
+                      "firstname": "{{input.body.firstname}}"
+                    }
+                  },
+                  "connectionId": null,
+                  "acceptNOK": false,
+                  "basic": null
+                }
+              },
+              {
+                "id": "checkSignup",
+                "alias": "Is it success?",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "BOOLEAN_CONDITION",
+                "params": {
+                  "evaluate": {
+                    "operator": "AND",
+                    "operands": [
+                      {
+                        "operator": "EQ",
+                        "operands": [
+                          "{{signup.success}}",
+                          true
+                        ]
+                      }
+                    ]
+                  },
+                  "then": [
+                    {
+                      "id": "storeState_ueyc",
+                      "alias": "Store data for ending screen",
+                      "allowFailure": false,
+                      "notes": null,
+                      "type": "FLOW",
+                      "action": "STORE_STATE",
+                      "params": {
+                        "data": {
+                          "redirectionUrl": "{{signup.body.claim_url}}"
+                        }
+                      }
+                    },
+                    {
+                      "id": "submitForm_bY7l",
+                      "alias": "Go to ending screen",
+                      "allowFailure": false,
+                      "notes": null,
+                      "type": "FLOW",
+                      "action": "SUBMIT_FORM",
+                      "params": {
+                        "endingScreen": true
+                      }
+                    }
+                  ],
+                  "otherwise": [
+                    {
+                      "id": "returnError_sZYD",
+                      "allowFailure": false,
+                      "alias": null,
+                      "notes": null,
+                      "type": "FLOW",
+                      "action": "ERROR_MESSAGE",
+                      "params": {
+                        "message": "{{signup.body.error_message}}"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "id": "showErrorMessage_IXGP",
+                "allowFailure": false,
+                "type": "FLOW",
+                "action": "ERROR_MESSAGE",
+                "params": {
+                  "message": "This verification code is not valid. Please, review it and try it again."
+                },
+                "alias": null,
+                "notes": null
+              }
+            ]
+          },
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-1#": {
+      "name": "Generate OTP",
+      "description": null,
+      "actions": [
+        {
+          "id": "generateOtp",
+          "allowFailure": false,
+          "type": "OTP",
+          "action": "GENERATE_CODE",
+          "params": {
+            "reference": "{{input.body.email}}",
+            "length": 4
+          },
+          "alias": null,
+          "notes": null
+        },
+        {
+          "id": "sendEmail_89oF",
+          "allowFailure": false,
+          "type": "EMAIL",
+          "action": "SEND_EMAIL",
+          "params": {
+            "sender": {
+              "name": null
+            },
+            "recipient": {
+              "name": "{{input.body.firstname}}",
+              "email": "{{input.body.email}}"
+            },
+            "subject": "{{generateOtp.code}} is you verification code",
+            "content": "<p>Hello {{input.body.firstname}}</p>\n<p>Please use the verification code below on the website:</p>\n<p><b>{{generateOtp.code}}</b></p>\n<p>If you didn't request this, you can ignore this email or let us know.</p>",
+            "logoUrl": null
+          },
+          "alias": null,
+          "notes": null
+        },
+        {
+          "id": "jumpToAFormStep_h7TV",
+          "allowFailure": false,
+          "type": "FLOW",
+          "action": "JUMP_TO_STEP",
+          "params": {
+            "formId": "165832593193873813",
+            "stepId": "step_1XYA"
+          },
+          "alias": null,
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
+    "#FLOW-3#": {
+      "name": "Activecampaign - Create user",
+      "description": null,
+      "actions": [
+        {
+          "id": "createOrUpdateContact_pT2f",
+          "allowFailure": false,
+          "type": "ACTIVECAMPAIGN",
+          "action": "UPSERT_CONTACT",
+          "params": {
+            "email": "{{input.body.email}}",
+            "firstName": "{{input.body.firstname}}",
+            "customFields": {},
+            "connectionId": "#CONN-1#",
+            "baseUrl": null,
+            "apiKey": null,
+            "lastName": null,
+            "phone": null
+          },
+          "alias": null,
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": false,
+      "security": {
+        "rateLimits": []
+      }
+    }
+  },
+  "connections": {
+    "#CONN-1#": {
+      "id": "165825048283965793",
+      "appId": "ACTIVECAMPAIGN",
+      "name": "ActiveCampaign #2"
+    }
+  }
+}
