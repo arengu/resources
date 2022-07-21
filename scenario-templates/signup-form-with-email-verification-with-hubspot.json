@@ -209,6 +209,182 @@
     "tags": []
   },
   "flows": {
+    "#FLOW-1#": {
+      "name": "Generate OTP / Social signup",
+      "description": null,
+      "actions": [
+        {
+          "id": "ifThenCondition_oVTp",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "FLOW",
+          "action": "BOOLEAN_CONDITION",
+          "params": {
+            "evaluate": {
+              "operator": "AND",
+              "operands": [
+                {
+                  "operator": "NOT_EXISTS",
+                  "operands": [
+                    "{{input.body.social}}"
+                  ]
+                }
+              ]
+            },
+            "then": [
+              {
+                "id": "generateOtp",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "OTP",
+                "action": "GENERATE_CODE",
+                "params": {
+                  "reference": "{{input.body.email}}",
+                  "length": 4
+                }
+              },
+              {
+                "id": "sendEmail_89oF",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "EMAIL",
+                "action": "SEND_EMAIL",
+                "params": {
+                  "sender": {
+                    "name": null
+                  },
+                  "recipient": {
+                    "name": "{{input.body.firstname}}",
+                    "email": "{{input.body.email}}"
+                  },
+                  "subject": "{{generateOtp.code}} is you verification code",
+                  "content": "<p>Hello {{input.body.firstname}}</p>\n<p>Please use the verification code below on the website:</p>\n<p><b>{{generateOtp.code}}</b></p>\n<p>If you didn't request this, you can ignore this email or let us know.</p>",
+                  "logoUrl": null
+                }
+              },
+              {
+                "id": "jumpToAFormStep_h7TV",
+                "allowFailure": false,
+                "alias": null,
+                "notes": null,
+                "type": "FLOW",
+                "action": "JUMP_TO_STEP",
+                "params": {
+                  "formId": "165832593193873813",
+                  "stepId": "step_1XYA"
+                }
+              }
+            ],
+            "otherwise": [
+              {
+                "alias": "Signup with custom API",
+                "id": "signup1",
+                "allowFailure": false,
+                "notes": null,
+                "type": "HTTP",
+                "action": "SEND_REQUEST",
+                "params": {
+                  "url": "https://custom.demos.arengu.com//signup",
+                  "method": "POST",
+                  "headers": {
+                    "Authorization": "Bearer JnUjNjUmZWZLTW93NjFkOG8zeFRlI3NYbWphem5GZSZIMXlFSmVZeVlMRk03XjhCTGRBQUBAOEtvJDlGdnRNRg"
+                  },
+                  "params": {},
+                  "type": "JSON",
+                  "body": {
+                    "sub": "{{input.body.email ?? input.body.social.profile.email}}",
+                    "password": "{{input.body.password ?? undefined}}",
+                    "meta": {
+                      "firstname": "{{input.body.firstname}}"
+                    }
+                  },
+                  "connectionId": null,
+                  "acceptNOK": false,
+                  "basic": null
+                }
+              },
+              {
+                "alias": "Is it success?",
+                "id": "checkSignup1",
+                "allowFailure": false,
+                "notes": null,
+                "type": "FLOW",
+                "action": "BOOLEAN_CONDITION",
+                "params": {
+                  "evaluate": {
+                    "operator": "AND",
+                    "operands": [
+                      {
+                        "operator": "EQ",
+                        "operands": [
+                          "{{signup1.success}}",
+                          true
+                        ]
+                      }
+                    ]
+                  },
+                  "then": [
+                    {
+                      "alias": "Store data for ending screen",
+                      "id": "storeStateVariable_KZlC",
+                      "allowFailure": false,
+                      "notes": null,
+                      "type": "FLOW",
+                      "action": "STORE_STATE",
+                      "params": {
+                        "data": {
+                          "redirectionUrl": "{{signup1.body.claim_url}}"
+                        }
+                      }
+                    },
+                    {
+                      "id": "submitTheForm_M8GR",
+                      "allowFailure": false,
+                      "alias": null,
+                      "notes": null,
+                      "type": "FLOW",
+                      "action": "SUBMIT_FORM",
+                      "params": {
+                        "endingScreen": true
+                      }
+                    }
+                  ],
+                  "otherwise": [
+                    {
+                      "id": "showErrorMessage_6G3i",
+                      "allowFailure": false,
+                      "alias": null,
+                      "notes": null,
+                      "type": "FLOW",
+                      "action": "ERROR_MESSAGE",
+                      "params": {
+                        "message": "{{signup1.body.error_message}}"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": true,
+      "security": {
+        "rateLimits": []
+      }
+    },
     "#FLOW-2#": {
       "name": "Verify OTP & Signup",
       "description": null,
@@ -348,69 +524,6 @@
               }
             ]
           },
-          "notes": null
-        }
-      ],
-      "triggers": {
-        "webhook": {
-          "enabled": false,
-          "secret": null
-        },
-        "submission": {
-          "formIds": []
-        }
-      },
-      "synchronous": true,
-      "security": {
-        "rateLimits": []
-      }
-    },
-    "#FLOW-1#": {
-      "name": "Generate OTP",
-      "description": null,
-      "actions": [
-        {
-          "id": "generateOtp",
-          "allowFailure": false,
-          "type": "OTP",
-          "action": "GENERATE_CODE",
-          "params": {
-            "reference": "{{input.body.email}}",
-            "length": 4
-          },
-          "alias": null,
-          "notes": null
-        },
-        {
-          "id": "sendEmail_89oF",
-          "allowFailure": false,
-          "type": "EMAIL",
-          "action": "SEND_EMAIL",
-          "params": {
-            "sender": {
-              "name": null
-            },
-            "recipient": {
-              "name": "{{input.body.firstname}}",
-              "email": "{{input.body.email}}"
-            },
-            "subject": "{{generateOtp.code}} is you verification code",
-            "content": "<p>Hello {{input.body.firstname}}</p>\n<p>Please use the verification code below on the website:</p>\n<p><b>{{generateOtp.code}}</b></p>\n<p>If you didn't request this, you can ignore this email or let us know.</p>",
-            "logoUrl": null
-          },
-          "alias": null,
-          "notes": null
-        },
-        {
-          "id": "jumpToAFormStep_h7TV",
-          "allowFailure": false,
-          "type": "FLOW",
-          "action": "JUMP_TO_STEP",
-          "params": {
-            "formId": "165832593193873813",
-            "stepId": "step_1XYA"
-          },
-          "alias": null,
           "notes": null
         }
       ],
