@@ -14,6 +14,22 @@
         "name": "Basic details",
         "components": [
           {
+            "id": "firstname",
+            "label": "First Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
             "id": "email",
             "label": "Email",
             "hint": null,
@@ -42,22 +58,6 @@
                 "minLength": 0,
                 "maxLength": null
               }
-            }
-          },
-          {
-            "id": "firstname",
-            "label": "First Name",
-            "hint": null,
-            "category": "FIELD",
-            "type": "TEXT",
-            "required": true,
-            "transient": false,
-            "config": {
-              "multiline": false,
-              "defaultValue": null,
-              "minLength": 0,
-              "maxLength": null,
-              "placeholder": null
             }
           },
           {
@@ -144,44 +144,6 @@
     "tags": []
   },
   "flows": {
-    "#FLOW-2#": {
-      "name": "Hubspot - Create user",
-      "description": null,
-      "actions": [
-        {
-          "id": "createOrUpdateContact",
-          "allowFailure": false,
-          "alias": null,
-          "notes": null,
-          "type": "HUBSPOT",
-          "action": "UPSERT_CONTACT",
-          "params": {
-            "email": "{{input.body.email}}",
-            "properties": [
-              {
-                "property": "firstname",
-                "value": "{{input.body.firstname}}"
-              }
-            ],
-            "connectionId": "#CONN-1#",
-            "apiKey": null
-          }
-        }
-      ],
-      "triggers": {
-        "webhook": {
-          "enabled": false,
-          "secret": null
-        },
-        "submission": {
-          "formIds": []
-        }
-      },
-      "synchronous": false,
-      "security": {
-        "rateLimits": []
-      }
-    },
     "#FLOW-1#": {
       "name": "Signup flow",
       "description": null,
@@ -194,7 +156,7 @@
           "type": "HTTP",
           "action": "SEND_REQUEST",
           "params": {
-            "url": "https://custom.demos.arengu.com//signup",
+            "url": "https://custom.demos.arengu.com/signup",
             "method": "POST",
             "headers": {
               "Authorization": "Bearer JnUjNjUmZWZLTW93NjFkOG8zeFRlI3NYbWphem5GZSZIMXlFSmVZeVlMRk03XjhCTGRBQUBAOEtvJDlGdnRNRg"
@@ -288,11 +250,49 @@
       "security": {
         "rateLimits": []
       }
+    },
+    "#FLOW-2#": {
+      "name": "Hubspot - Create user",
+      "description": null,
+      "actions": [
+        {
+          "id": "createOrUpdateContact",
+          "allowFailure": false,
+          "alias": null,
+          "notes": null,
+          "type": "HUBSPOT",
+          "action": "UPSERT_CONTACT",
+          "params": {
+            "email": "{{input.body.email}}",
+            "properties": [
+              {
+                "property": "firstname",
+                "value": "{{input.body.firstname}}"
+              }
+            ],
+            "connectionId": "#CONN-1#",
+            "apiKey": null
+          }
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": false,
+      "security": {
+        "rateLimits": []
+      }
     }
   },
   "connections": {
     "#CONN-1#": {
-      "id": "165825012017930500",
+      "id": "165952889785049059",
       "appId": "HUBSPOT",
       "name": "HubSpot #3"
     }

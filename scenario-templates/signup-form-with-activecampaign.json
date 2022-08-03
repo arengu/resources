@@ -14,6 +14,22 @@
         "name": "Basic details",
         "components": [
           {
+            "id": "firstname",
+            "label": "First Name",
+            "hint": null,
+            "category": "FIELD",
+            "type": "TEXT",
+            "required": true,
+            "transient": false,
+            "config": {
+              "multiline": false,
+              "defaultValue": null,
+              "minLength": 0,
+              "maxLength": null,
+              "placeholder": null
+            }
+          },
+          {
             "id": "email",
             "label": "Email",
             "hint": null,
@@ -42,22 +58,6 @@
                 "minLength": 0,
                 "maxLength": null
               }
-            }
-          },
-          {
-            "id": "firstname",
-            "label": "First Name",
-            "hint": null,
-            "category": "FIELD",
-            "type": "TEXT",
-            "required": true,
-            "transient": false,
-            "config": {
-              "multiline": false,
-              "defaultValue": null,
-              "minLength": 0,
-              "maxLength": null,
-              "placeholder": null
             }
           },
           {
@@ -144,43 +144,6 @@
     "tags": []
   },
   "flows": {
-    "#FLOW-2#": {
-      "name": "Activecampaign - Create user",
-      "description": null,
-      "actions": [
-        {
-          "id": "createOrUpdateContact_pT2f",
-          "allowFailure": false,
-          "type": "ACTIVECAMPAIGN",
-          "action": "UPSERT_CONTACT",
-          "params": {
-            "email": "{{input.body.email}}",
-            "firstName": "{{input.body.firstname}}",
-            "customFields": {},
-            "connectionId": "#CONN-1#",
-            "baseUrl": null,
-            "apiKey": null,
-            "lastName": null,
-            "phone": null
-          },
-          "alias": null,
-          "notes": null
-        }
-      ],
-      "triggers": {
-        "webhook": {
-          "enabled": false,
-          "secret": null
-        },
-        "submission": {
-          "formIds": []
-        }
-      },
-      "synchronous": false,
-      "security": {
-        "rateLimits": []
-      }
-    },
     "#FLOW-1#": {
       "name": "Signup flow",
       "description": null,
@@ -193,7 +156,7 @@
           "type": "HTTP",
           "action": "SEND_REQUEST",
           "params": {
-            "url": "https://custom.demos.arengu.com//signup",
+            "url": "https://custom.demos.arengu.com/signup",
             "method": "POST",
             "headers": {
               "Authorization": "Bearer JnUjNjUmZWZLTW93NjFkOG8zeFRlI3NYbWphem5GZSZIMXlFSmVZeVlMRk03XjhCTGRBQUBAOEtvJDlGdnRNRg"
@@ -287,11 +250,48 @@
       "security": {
         "rateLimits": []
       }
+    },
+    "#FLOW-2#": {
+      "name": "Activecampaign - Create user",
+      "description": null,
+      "actions": [
+        {
+          "id": "createOrUpdateContact_pT2f",
+          "allowFailure": false,
+          "type": "ACTIVECAMPAIGN",
+          "action": "UPSERT_CONTACT",
+          "params": {
+            "email": "{{input.body.email}}",
+            "firstName": "{{input.body.firstname}}",
+            "customFields": {},
+            "connectionId": "#CONN-1#",
+            "baseUrl": null,
+            "apiKey": null,
+            "lastName": null,
+            "phone": null
+          },
+          "alias": null,
+          "notes": null
+        }
+      ],
+      "triggers": {
+        "webhook": {
+          "enabled": false,
+          "secret": null
+        },
+        "submission": {
+          "formIds": []
+        }
+      },
+      "synchronous": false,
+      "security": {
+        "rateLimits": []
+      }
     }
   },
   "connections": {
     "#CONN-1#": {
-      "id": "165825048283965793",
+      "id": "165952805994094210",
       "appId": "ACTIVECAMPAIGN",
       "name": "ActiveCampaign #2"
     }
